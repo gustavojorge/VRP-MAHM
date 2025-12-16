@@ -1,5 +1,5 @@
 !start.
 
 +!start <-
-    .print("Agent started successfully");
-    +best_solution(9999).
+    .print("Agente BDI iniciado");
+    .print("Pronto para otimização").

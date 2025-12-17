@@ -1,0 +1,57 @@
+# ------------------------------
+# Python (bytecode / cache)
+# ------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ------------------------------
+# Virtual environments (Poetry / venv)
+# ------------------------------
+.venv/
+venv/
+env/
+.env/
+
+# dotenv files (secrets/local overrides)
+.env.*
+
+# ------------------------------
+# Packaging / build artifacts
+# ------------------------------
+build/
+dist/
+*.egg-info/
+*.egg
+pip-wheel-metadata/
+
+# ------------------------------
+# Test / coverage / typecheck / lint caches
+# ------------------------------
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.hypothesis/
+
+# ------------------------------
+# Tool / OS / editor junk
+# ------------------------------
+.cache/
+*.log
+*.tmp
+*.swp
+*.swo
+*~
+
+.vscode/
+.idea/
+*.iml
+
+.DS_Store
+Thumbs.db
+
+

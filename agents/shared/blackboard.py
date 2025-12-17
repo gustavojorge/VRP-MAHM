@@ -1,6 +1,7 @@
 from typing import List, Optional
 from threading import Lock
 
+
 class GlobalBest:
     def __init__(self):
         self.route: Optional[List[int]] = None
@@ -28,11 +29,24 @@ class GlobalBest:
 
     def get(self):
         """
-        Retorna uma cópia do g_best atual.
+        Retorna uma cópia segura do g_best atual.
         """
         with self._lock:
-            return self.route, self.cost, self.agent_id
+            return (
+                self.route.copy() if self.route else None,
+                self.cost,
+                self.agent_id
+            )
+
+    def has_solution(self) -> bool:
+        return self.route is not None
+
+    def reset(self):
+        with self._lock:
+            self.route = None
+            self.cost = float("inf")
+            self.agent_id = None
 
 
-# Instância única (singleton)
+# Singleton
 global_best = GlobalBest()

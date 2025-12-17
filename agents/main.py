@@ -1,40 +1,34 @@
-import asyncio
-from spade_bdi.bdi import BDIAgent
-from agents.utils.load_instance import load_instance
+from agents.agent_beliefs import AgentBeliefs
+from agents.agent_cycle import run_agent_cycle
 from agents.utils.generate_random_feasible_route import generate_random_feasible_route
-from agents.utils.compute_route_cost import compute_route_cost
+from agents.problem.evaluator import evaluate_route
 
-async def main():
-    instance_path = "instances/1.json"
-    instance = load_instance(instance_path)
+# Registro dos agentes ativos
+AGENTS = {}
 
-    # Geração da solução inicial (pbest)
-    route = generate_random_feasible_route(instance)
-    cost = compute_route_cost(route, instance["trip_time_matrix"])
+def initialize_agent(agent_id: str):
+    instance = load_instance("instances/1.json")
 
-    print("=== SOLUÇÃO INICIAL GERADA ===")
-    print("Rota:", route)
-    print("Custo:", cost)
+    initial_route = generate_random_feasible_route(instance)
+    feasible, cost = evaluate_route(initial_route, instance)
 
-    # Criação do agente BDI
-    agent = BDIAgent(
-        "agent1@localhost",
-        "123",
-        "agents/agent.asl"
+    beliefs = AgentBeliefs(
+        agent_id=agent_id,
+        metaheuristics=["VND", "ILS"]
     )
 
-    await agent.start()
+    beliefs.update_current_solution(initial_route, cost)
+    beliefs.try_update_pbest(initial_route, cost)
 
-    # Armazenando crenças iniciais
-    agent.bdi.set_belief("pbest_route", *route)
-    agent.bdi.set_belief("pbest_cost", cost)
-
-    print("\n=== CRENÇAS DO AGENTE ===")
-    agent.bdi.print_beliefs()
-
-    await asyncio.sleep(2)
-    await agent.stop()
+    AGENTS[agent_id] = {
+        "beliefs": beliefs,
+        "instance": instance
+    }
 
 
-if __name__ == "__main__":
-    asyncio.run(main())
+def run_cycle(agent_id: str):
+    data = AGENTS[agent_id]
+    beliefs = data["beliefs"]
+    instance = data["instance"]
+
+    run_agent_cycle(beliefs, instance)

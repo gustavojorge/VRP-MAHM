@@ -47,6 +47,7 @@ def decision_method(
 
     if strategy == "roulette":
         scores = beliefs.get_all_action_scores()
+        print("Scores: ", scores)
         return roulette_wheel_selection(scores)
 
     raise ValueError(f"Estratégia de decisão desconhecida: {strategy}")

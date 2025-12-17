@@ -2,7 +2,8 @@ from typing import Dict, Callable, Tuple, List
 
 from agents.agent_beliefs import AgentBeliefs
 from agents.shared.blackboard import global_best
-from agents.methods.decision_method import select_action
+from agents.methods.decision_method import decision_method
+
 from agents.methods.path_relinking import path_relinking
 from agents.problem.evaluator import evaluate_route
 
@@ -54,17 +55,21 @@ def run_agent_cycle(
     # ------------------------------------------------------------
     # 1️⃣ Decision Method
     # ------------------------------------------------------------
-    action_name = select_action(beliefs)
+    print("1 - Decision Method.")
+    action_name = decision_method(beliefs)
+    print("Metaheurística a ser executada: ", action_name)
     action_fn = METAHEURISTICS[action_name]
 
     # ------------------------------------------------------------
     # 2️⃣ Execução da Metaheurística (Ação)
     # ------------------------------------------------------------
+    print("2 - Execução da Metaheurística (Ação)")
     new_route, new_cost = action_fn(current_route, instance)
 
     # ------------------------------------------------------------
     # 3️⃣ Learning Method
     # ------------------------------------------------------------
+    print("3 - Learning Method")
     beliefs.update_after_action(
         action_name=action_name,
         old_cost=current_cost,
@@ -76,6 +81,7 @@ def run_agent_cycle(
     # ------------------------------------------------------------
     # 4️⃣ Velocity Operator (Path-Relinking)
     # ------------------------------------------------------------
+    print("4 - Velocity Operator (Path-Relinking)")
     g_best_route, g_best_cost, _ = global_best.get()
 
     # Se ainda não existe g_best, não há diversificação
@@ -103,11 +109,13 @@ def run_agent_cycle(
     # ------------------------------------------------------------
     # 5️⃣ Atualização do p_best
     # ------------------------------------------------------------
+    print("5 - Atualização do p_best")
     beliefs.try_update_pbest(final_route, final_cost)
 
     # ------------------------------------------------------------
     # 6️⃣ Atualização do g_best (Blackboard)
     # ------------------------------------------------------------
+    print("6 - Atualização do g_best (Blackboard)")
     global_best.try_update(
         candidate_route=final_route,
         candidate_cost=final_cost,

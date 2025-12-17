@@ -1,0 +1,17 @@
+==============================
+TESTE DO VND
+==============================
+Rota inicial: [0, 2, 1, 3, 4, 0]
+Viável: True
+Custo inicial: 40
+
+>>> DISPARANDO VND
+
+>>> RESULTADO DO VND
+Rota final: [0, 1, 2, 3, 4, 0]
+Custo final: 32
+✔ VND encontrou melhoria
+
+==============================
+FIM DO TESTE DO VND
+==============================

@@ -1,0 +1,135 @@
+
+==============================
+TESTE DO ILS
+==============================
+Rota inicial: [0, 1, 4, 2, 3, 0]
+Viável: True
+Custo inicial: 38
+
+>>> DISPARANDO ILS
+
+--- ILS Iteração 1 ---
+Rota perturbada: [0, 1, 3, 2, 4, 0]
+Rota após VND: [0, 1, 2, 3, 4, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 2 ---
+Rota perturbada: [0, 1, 3, 2, 4, 0]
+Rota após VND: [0, 1, 2, 3, 4, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 3 ---
+Rota perturbada: [0, 4, 1, 2, 3, 0]
+Rota após VND: [0, 1, 2, 4, 3, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 4 ---
+Rota perturbada: [0, 2, 1, 3, 4, 0]
+Rota após VND: [0, 1, 2, 3, 4, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 5 ---
+Rota perturbada: [0, 3, 2, 1, 4, 0]
+❌ Rota inviável após perturbação — descartada
+
+--- ILS Iteração 6 ---
+Rota perturbada: [0, 2, 4, 1, 3, 0]
+Rota após VND: [0, 1, 4, 3, 2, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 7 ---
+Rota perturbada: [0, 1, 2, 4, 3, 0]
+Rota após VND: [0, 1, 2, 4, 3, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 8 ---
+Rota perturbada: [0, 2, 4, 1, 3, 0]
+Rota após VND: [0, 1, 4, 3, 2, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 9 ---
+Rota perturbada: [0, 1, 2, 4, 3, 0]
+Rota após VND: [0, 1, 2, 4, 3, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 10 ---
+Rota perturbada: [0, 1, 3, 2, 4, 0]
+Rota após VND: [0, 1, 2, 3, 4, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 11 ---
+Rota perturbada: [0, 3, 2, 1, 4, 0]
+❌ Rota inviável após perturbação — descartada
+
+--- ILS Iteração 12 ---
+Rota perturbada: [0, 1, 2, 4, 3, 0]
+Rota após VND: [0, 1, 2, 4, 3, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 13 ---
+Rota perturbada: [0, 1, 3, 2, 4, 0]
+Rota após VND: [0, 1, 2, 3, 4, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 14 ---
+Rota perturbada: [0, 4, 2, 3, 1, 0]
+Rota após VND: [0, 1, 2, 3, 4, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 15 ---
+Rota perturbada: [0, 4, 2, 3, 1, 0]
+Rota após VND: [0, 1, 2, 3, 4, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 16 ---
+Rota perturbada: [0, 4, 1, 2, 3, 0]
+Rota após VND: [0, 1, 2, 4, 3, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 17 ---
+Rota perturbada: [0, 1, 4, 3, 2, 0]
+Rota após VND: [0, 1, 4, 3, 2, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 18 ---
+Rota perturbada: [0, 3, 1, 4, 2, 0]
+❌ Rota inviável após perturbação — descartada
+
+--- ILS Iteração 19 ---
+Rota perturbada: [0, 2, 4, 1, 3, 0]
+Rota após VND: [0, 1, 4, 3, 2, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+--- ILS Iteração 20 ---
+Rota perturbada: [0, 1, 2, 4, 3, 0]
+Rota após VND: [0, 1, 2, 4, 3, 0]
+Custo após VND: 32
+➖ Solução não melhorou
+
+==============================
+RESULTADO FINAL DO ILS
+==============================
+Rota final: [0, 1, 2, 4, 3, 0]
+Custo final: 32
+Viável: True
+✔ ILS encontrou melhoria
+
+==============================
+FIM DO TESTE DO ILS
+==============================

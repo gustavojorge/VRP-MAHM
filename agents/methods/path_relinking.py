@@ -2,11 +2,12 @@ from typing import List, Callable, Tuple
 
 from agents.problem.evaluator import evaluate_route
 
+
 def path_relinking(
     origin: List[int],
     target: List[int],
-    trip_time_matrix: List[List[int]],
-    intensification_method: Callable[[List[int], List[List[int]]], Tuple[List[int], float]]
+    instance: dict,
+    intensification_method: Callable[[List[int], dict], Tuple[List[int], float]]
 ) -> Tuple[List[int], float]:
     """
     Path-Relinking para problemas de permutação
@@ -16,49 +17,57 @@ def path_relinking(
     target  : Pt — g_best ou solução elite
     """
 
-    # Copiamos para não alterar a solução original
+    # Cópia defensiva
     current = origin.copy()
 
     # Avaliação da origem (baseline)
-    origin_feasible, origin_cost = evaluate_route(origin, trip_time_matrix)
-
+    origin_feasible, origin_cost = evaluate_route(origin, instance)
     if not origin_feasible:
         raise ValueError("Path-Relinking iniciado com solução inviável")
 
-    # Melhor solução encontrada ao longo do caminho
+    # Melhor solução ao longo do caminho
     best_route = origin.copy()
     best_cost = origin_cost
 
-    # Ignora depósito (posição 0 e última)
-    positions = list(range(1, len(origin) - 1))
+    # Ignora o depósito (posição 0 e última)
+    positions = range(1, len(origin) - 1)
 
     for i in positions:
 
-        # Se o elemento já está correto, pula
+        # Se já está igual ao target, não faz nada
         if current[i] == target[i]:
             continue
 
-        # Encontra onde está o elemento desejado
+        # Encontra a posição do nó desejado
         j = current.index(target[i])
 
-        # Swap direcionado (aumenta similaridade com target)
+        # Swap direcionado
         current[i], current[j] = current[j], current[i]
 
-        is_feasible, current_cost = evaluate_route(current, trip_time_matrix)
+        feasible, current_cost = evaluate_route(current, instance)
 
-        # 🔴 Se inviável, ignora e continua o caminho
-        if not is_feasible:
+        # ❌ Solução inviável → ignora e continua
+        if not feasible:
             continue
 
-        # Atualiza melhor do caminho
+        # ✔ Atualiza melhor solução do caminho
         if current_cost < best_cost:
             best_route = current.copy()
             best_cost = current_cost
 
         # 🔴 Parada oportunista (melhor que Ps)
         if current_cost < origin_cost:
-            # Intensificação com a meta-heurística escolhida
-            return intensification_method(current, trip_time_matrix)
+            intensified_route, intensified_cost = intensification_method(
+                current.copy(), instance
+            )
+
+            # Blindagem final
+            feasible_int, cost_int = evaluate_route(intensified_route, instance)
+            if feasible_int:
+                return intensified_route, intensified_cost
+            else:
+                # Se a intensificação falhar, mantém melhor do caminho
+                return best_route, best_cost
 
     # 🟦 Nenhuma melhoria relevante encontrada
     return best_route, best_cost

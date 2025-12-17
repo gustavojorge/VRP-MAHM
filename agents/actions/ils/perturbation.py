@@ -1,7 +1,6 @@
 import random
 from typing import List
 
-
 def perturb_route(route: List[int], k: int = 2) -> List[int]:
     """
     Aplica k swaps aleatórios na rota (mantendo depósito fixo)

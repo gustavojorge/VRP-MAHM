@@ -4,8 +4,7 @@ def swap_neighborhood(route: List[int]) -> List[List[int]]:
     neighbors = []
     n = len(route)
 
-    # ignora o depósito (posição 0 e última)
-    for i in range(1, n - 2):
+    for i in range(1, n - 1):
         for j in range(i + 1, n - 1):
             new_route = route.copy()
             new_route[i], new_route[j] = new_route[j], new_route[i]

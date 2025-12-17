@@ -1,14 +1,14 @@
-from typing import List
+from typing import List, Tuple
 
-from agents.utils.compute_route_cost import compute_route_cost
 from agents.actions.vnd.vnd import vnd
 from agents.actions.ils.perturbation import perturb_route
+from agents.problem.evaluator import evaluate_route
 
 def ils(
     initial_route: List[int],
     trip_time_matrix: List[List[int]],
     max_iterations: int = 50
-) -> tuple[List[int], int]:
+) -> Tuple[List[int], float]:
     """
     Iterated Local Search (ILS)
     """
@@ -20,13 +20,18 @@ def ils(
     best_cost = current_cost
 
     for _ in range(max_iterations):
-        # Diversificação
-        perturbed = perturb_route(current_route, k=2)
 
-        # Intensificação
-        new_route, new_cost = vnd(perturbed, trip_time_matrix)
+        # 🟦 Diversificação (não garante viabilidade)
+        perturbed_route = perturb_route(current_route, k=2)
 
-        # Aceitação (greedy)
+        is_feasible, _ = evaluate_route(perturbed_route, trip_time_matrix)
+        if not is_feasible:
+            continue  # descarta e segue para próxima iteração
+
+        # 🔴 Intensificação (VND já filtra inviáveis)
+        new_route, new_cost = vnd(perturbed_route, trip_time_matrix)
+
+        # 🟢 Aceitação (greedy, apenas viáveis)
         if new_cost < best_cost:
             best_route = new_route
             best_cost = new_cost

@@ -58,8 +58,15 @@ def run_agent_cycle(
     logger.log_phase("[Decision Method] ")
     logger.log(f"---> Chosen Metaheuristic: {action_name}")
     
+    # Validate that the chosen action is available for this agent
+    if action_name not in beliefs.actions:
+        raise ValueError(
+            f"[ERROR] Metaheuristic '{action_name}' is not available for this agent. "
+            f"Available: {list(beliefs.actions.keys())}"
+        )
+    
     if action_name not in METAHEURISTICS:
-        raise ValueError(f"[ERROR] Metaheuristic '{action_name}' is not registered")
+        raise ValueError(f"[ERROR] Metaheuristic '{action_name}' is not registered in METAHEURISTICS")
     action_fn = METAHEURISTICS[action_name]
 
     # ------------------------------------------------------------
@@ -102,8 +109,17 @@ def run_agent_cycle(
             """
             Opportunistic intensification:
             choose the best metaheuristic according to the current beliefs.
+            Note: Only uses metaheuristics available to this agent (from beliefs.actions).
             """
             best_action = beliefs.get_best_action()
+            # Validate that the best action is available for this agent
+            if best_action not in beliefs.actions:
+                raise ValueError(
+                    f"[ERROR] Best action '{best_action}' is not available for this agent. "
+                    f"Available: {list(beliefs.actions.keys())}"
+                )
+            if best_action not in METAHEURISTICS:
+                raise ValueError(f"[ERROR] Metaheuristic '{best_action}' is not registered in METAHEURISTICS")
             return METAHEURISTICS[best_action](route, instance)
 
         final_route, final_cost = path_relinking(

@@ -4,12 +4,15 @@ from typing import Optional
 class AgentLogger:
     """
     Logger simples para cada agente que escreve em arquivo.
-    Cada agente tem seu próprio arquivo de log: logs/{agent_id}.log
+    Cada agente tem seu próprio arquivo de log: logs/{instance_name}/{agent_id}.log
     """
     
-    def __init__(self, agent_id: str):
+    def __init__(self, agent_id: str, instance_name: Optional[str] = None):
         self.agent_id = agent_id
-        self.log_dir = "logs"
+        if instance_name:
+            self.log_dir = f"logs/{instance_name}"
+        else:
+            self.log_dir = "logs"
         self.log_file = f"{self.log_dir}/{agent_id}.log"
         
         # Criar diretório de logs se não existir
@@ -46,10 +49,31 @@ class AgentLogger:
 
 # Singleton global - será inicializado por cada agente
 _loggers: dict[str, AgentLogger] = {}
+_current_instance: Optional[str] = None
 
-def get_logger(agent_id: str) -> AgentLogger:
-    """Obtém ou cria um logger para o agente"""
-    if agent_id not in _loggers:
-        _loggers[agent_id] = AgentLogger(agent_id)
-    return _loggers[agent_id]
+def set_instance_name(instance_name: str):
+    """Define o nome da instância atual para os logs"""
+    global _current_instance, _loggers
+    _current_instance = instance_name
+    # Limpar loggers existentes quando mudar de instância
+    _loggers.clear()
+
+def get_logger(agent_id: str, instance_name: Optional[str] = None) -> AgentLogger:
+    """
+    Obtém ou cria um logger para o agente.
+    
+    Args:
+        agent_id: ID do agente
+        instance_name: Nome da instância (se None, usa _current_instance)
+    """
+    global _current_instance
+    # Usar instance_name fornecido ou o global
+    instance = instance_name if instance_name is not None else _current_instance
+    
+    # Criar chave única combinando instance e agent_id
+    logger_key = f"{instance}_{agent_id}" if instance else agent_id
+    
+    if logger_key not in _loggers:
+        _loggers[logger_key] = AgentLogger(agent_id, instance)
+    return _loggers[logger_key]
 

@@ -7,8 +7,15 @@ from agents.utils.load_instance import load_instance
 # Active agents registry
 AGENTS = {}
 
-def initialize_agent(agent_id: str):
-    instance = load_instance("instances/50.json")
+def initialize_agent(agent_id: str, instance_path: str = "instances/50.json"):
+    """
+    Initialize an agent with a specific instance.
+    
+    Args:
+        agent_id: Agent identifier
+        instance_path: Path to the instance file
+    """
+    instance = load_instance(instance_path)
 
     # Generate initial feasible route with validation
     max_attempts = 100

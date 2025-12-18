@@ -36,7 +36,7 @@ def initialize_agent(agent_id: str):
 
     beliefs = AgentBeliefs(
         agent_id=agent_id,
-        metaheuristics=["VND", "ILS"]
+        metaheuristics=["VND", "VNS", "ILS"]
     )
 
     beliefs.update_current_solution(initial_route, cost)

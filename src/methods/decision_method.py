@@ -1,7 +1,7 @@
 import random
 from typing import Dict, Optional
 
-from agents.agent_beliefs import AgentBeliefs
+from src.agent_beliefs import AgentBeliefs
 
 
 def roulette_wheel_selection(scores: Dict[str, float]) -> str:

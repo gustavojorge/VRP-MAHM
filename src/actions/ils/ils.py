@@ -1,8 +1,8 @@
 from typing import List, Tuple
 
-from agents.actions.vnd.vnd import vnd
-from agents.actions.ils.perturbation import perturb_route
-from agents.problem.evaluator import evaluate_route
+from src.actions.vnd.vnd import vnd
+from src.actions.ils.perturbation import perturb_route
+from src.utils.evaluator import evaluate_route
 
 
 def ils(

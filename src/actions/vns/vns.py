@@ -1,10 +1,10 @@
 from typing import List, Tuple, Callable
 import random
 
-from agents.problem.evaluator import evaluate_route
-from agents.actions.vnd.vnd import vnd
-from agents.actions.vnd.neighborhoods.swap import swap_neighborhood
-from agents.actions.vnd.neighborhoods.two_opt import two_opt_neighborhood
+from src.utils.evaluator import evaluate_route
+from src.actions.vnd.vnd import vnd
+from src.actions.vnd.neighborhoods.swap import swap_neighborhood
+from src.actions.vnd.neighborhoods.two_opt import two_opt_neighborhood
 
 
 def vns(

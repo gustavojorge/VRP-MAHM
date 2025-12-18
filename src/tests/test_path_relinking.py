@@ -1,8 +1,8 @@
-from agents.utils.load_instance import load_instance
-from agents.utils.generate_random_feasible_route import generate_random_feasible_route
-from agents.problem.evaluator import evaluate_route
-from agents.methods.path_relinking import path_relinking
-from agents.actions.vnd.vnd import vnd
+from src.utils.load_instance import load_instance
+from src.utils.generate_random_feasible_route import generate_random_feasible_route
+from src.utils.evaluator import evaluate_route
+from src.methods.path_relinking import path_relinking
+from src.actions.vnd.vnd import vnd
 
 
 def verbose_intensification(route, instance):

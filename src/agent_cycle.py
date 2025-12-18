@@ -1,17 +1,17 @@
 from typing import Dict, Callable, Tuple, List
 
-from agents.agent_beliefs import AgentBeliefs
-from agents.shared import blackboard
-from agents.methods.decision_method import decision_method
-from agents.utils.logger import get_logger
+from src.agent_beliefs import AgentBeliefs
+from src.shared import blackboard
+from src.methods.decision_method import decision_method
+from src.utils.logger import get_logger
 
-from agents.methods.path_relinking import path_relinking
-from agents.problem.evaluator import evaluate_route
+from src.methods.path_relinking import path_relinking
+from src.utils.evaluator import evaluate_route
 
 # Available Metaheuristics
-from agents.actions.vnd.vnd import vnd
-from agents.actions.ils.ils import ils
-from agents.actions.vns.vns import vns
+from src.actions.vnd.vnd import vnd
+from src.actions.ils.ils import ils
+from src.actions.vns.vns import vns
 
 # Metaheuristics (Actions) registry
 METAHEURISTICS: Dict[str, Callable[[List[int], dict], Tuple[List[int], float]]] = {

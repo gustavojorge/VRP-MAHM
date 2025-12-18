@@ -1,5 +1,5 @@
-from agents.problem.feasibility import is_feasible_route
-from agents.utils.compute_route_cost import compute_route_cost
+from src.utils.feasibility import is_feasible_route
+from src.utils.compute_route_cost import compute_route_cost
 
 
 def evaluate_route(route: list[int], instance: dict) -> tuple[bool, float]:

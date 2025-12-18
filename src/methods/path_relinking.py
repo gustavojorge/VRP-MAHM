@@ -1,6 +1,6 @@
 from typing import List, Callable, Tuple
 
-from agents.problem.evaluator import evaluate_route
+from src.utils.evaluator import evaluate_route
 
 
 def path_relinking(

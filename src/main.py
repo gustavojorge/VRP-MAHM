@@ -1,8 +1,8 @@
-from agents.agent_beliefs import AgentBeliefs
-from agents.agent_cycle import run_agent_cycle
-from agents.utils.generate_random_feasible_route import generate_random_feasible_route
-from agents.problem.evaluator import evaluate_route
-from agents.utils.load_instance import load_instance
+from src.agent_beliefs import AgentBeliefs
+from src.agent_cycle import run_agent_cycle
+from src.utils.generate_random_feasible_route import generate_random_feasible_route
+from src.utils.evaluator import evaluate_route
+from src.utils.load_instance import load_instance
 
 # Active agents registry
 AGENTS = {}

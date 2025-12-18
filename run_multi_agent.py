@@ -1,7 +1,7 @@
 import multiprocessing as mp
-from agents.shared.blackboard import GlobalBest
-from agents.main import initialize_agent, run_cycle, AGENTS
-from agents.utils.logger import get_logger, set_instance_name
+from src.shared.blackboard import GlobalBest
+from src.main import initialize_agent, run_cycle, AGENTS
+from src.utils.logger import get_logger, set_instance_name
 
 def agent_worker(agent_id, max_iterations, global_blackboard, instance_path, instance_name):
     """
@@ -15,8 +15,8 @@ def agent_worker(agent_id, max_iterations, global_blackboard, instance_path, ins
         instance_name: Name of the instance (for logging)
     """
     # Inject the shared blackboard into the module
-    import agents.shared.blackboard
-    agents.shared.blackboard.global_best = global_blackboard
+    import src.shared.blackboard
+    src.shared.blackboard.global_best = global_blackboard
     
     # Set instance name for logging
     set_instance_name(instance_name)

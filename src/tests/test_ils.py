@@ -1,7 +1,7 @@
-from agents.actions.ils.ils import ils
-from agents.problem.evaluator import evaluate_route
-from agents.utils.load_instance import load_instance
-from agents.utils.generate_random_feasible_route import generate_random_feasible_route
+from src.actions.ils.ils import ils
+from src.utils.evaluator import evaluate_route
+from src.utils.load_instance import load_instance
+from src.utils.generate_random_feasible_route import generate_random_feasible_route
 
 
 def test_ils_basic():

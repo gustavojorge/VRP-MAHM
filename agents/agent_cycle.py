@@ -9,14 +9,14 @@ from agents.problem.evaluator import evaluate_route
 
 # Available Metaheuristics
 from agents.actions.vnd.vnd import vnd
-from agents.actions.vns.vns import vns
 from agents.actions.ils.ils import ils
+from agents.actions.vns.vns import vns
 
 # Metaheuristics (Actions) registry
 METAHEURISTICS: Dict[str, Callable[[List[int], dict], Tuple[List[int], float]]] = {
     "VND": vnd,
-    "VNS": vns,
     "ILS": ils,
+    "VNS": vns,
 }
 
 # ---------------------------------------------------------------------

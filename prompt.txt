@@ -1,0 +1,29 @@
+Eis a iteração de cada agente:
+
+1: Método de Decisão (Decistion Method). O agente p consulta suas crenças sobre as probabilidades de sucesso para selecionar uma Estratégia de Ação a (metaheurística, que atualmente são ILS e VND) e escolhe a metaheurística com maior nota/probabilidade para ser executada. 
+
+2 - A Estratégia de Ação 'a' é executada na posição atual do agente, gerando uma nova posição, que se torna a Posição de Origem para a próxima fase.
+
+3 - Método de Aprendizado (LM). O agente avalia a performance da ação 'a' (metaheurística) e atualiza as probabilidades de selecionar 'a' no futuro.
+
+4 - O velocityOperator (Path-Relinking) é executado, movendo o agente da Posição de Origem (nova posição) em direção ao target (incialmente, somente o g_best. Este é o processo de Diversificação). É dentro do Path-Relinking que ocorre o que é chamado de Intensificação Oportunista. Basicamente, quando o Path-Relinking encontra uma solução intermediária melhor que a posição atual, a trajetória é interrompida. Nesse ponto, o agente precisa executar a "meta-heurística mais eficiente (conforme o método de aprendizado)". Isso significa que o velocityOperator (que está sendo executado pelo agente autônomo p) tem acesso ao conhecimento interno do agente: ele pode consultar sua própria base de crenças (os resultados do LM) para identificar qual das meta-heurísticas (por exemplo, VNS, TS, SA) é a mais promissora para a intensificação naquele momento. Para consultar essas crenças, o Path-Relinking pode chamar o método de decisão, ou acessar a crenças do agente diretamente. 
+
+5 - O p_best é atualizado se a nova posição final do agente p for melhor que o p_best atual
+
+6 - O g_best é atualizado se a nova posição final do agente p for melhor que o g_best atual
+
+Pontos Chave da Ordem de Execução:
+
+1. Ação Antes da Diversificação: O agente primeiro tenta melhorar sua posição atual com uma meta-heurística e aprende com essa ação , antes de tentar o movimento (Path-Relinking)
+
+2. Intensificação Aninhada: A meta-heurística usada para Intensificação no velocityOperator é a heurística mais eficiente do agente no momento.
+
+3. Atualização Final da Crença: As atualizações de pbest e gbest (as crenças centrais do agente) são realizadas somente ao final da iteração completa , garantindo que a nova posição (que pode ter sido melhorada tanto pela meta-heurística inicial quanto pela intensificação oportunista) seja o valor comparado
+
+Em suma, é como um sistema de notas. As notas podem ser “taxa de sucesso” (ou seja, um contador que incrementa toda vez que a MH retorna uma solução melhor que a solução de entrada) ou “taxa de melhoria” (a taxa da função objetivo melhorada). Aqui você pode sugerir outras métricas de avaliação como a frequência de melhoria e etc, para serem usados no cálculo de probalidade do uso de cada solução. Essas informações serão acessíveis por meio das crenças do agente.  
+
+O método de decisão pode ser simplesmente uma roleta, onde quem tem maior nota tem maior chance de ser sorteado. Exemplo: se você temos 3 metaheurísticas e as notas são 2, 10, 4. O total das notas é 16. Então a probabilidade de sortear a primeira, a segunda ou a terceira metaheurística é 12,5%, 62,5% e 25% respectivamente.
+
+O método de aprendizado simplesmente computa as “taxas de sucesso” ou “taxa de melhoria”. Ou seja, o método de aprendizado apenas incrementa as variáveis que acumula esses valores, enquanto o método de decisão implementa essa roleta. O método de aprendizado é responsável por atualizar a memória e o histórico (suas crenças) do agente após a execução das ações, permitindo que experiências passadas influenciem ações futuras.
+
+Me informe os métodos que precisam ser criados. Quais rotinas serão criadas no Python e quais no .asl.

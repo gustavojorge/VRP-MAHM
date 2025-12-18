@@ -1,7 +1,7 @@
 from agents.main import initialize_agent, run_cycle, AGENTS
 from agents.shared.blackboard import global_best
 
-MAX_ITERATIONS = 10
+MAX_ITERATIONS = 20
 AGENT_ID = "agent1"
 
 def main():

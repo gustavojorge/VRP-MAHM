@@ -8,7 +8,7 @@ from agents.utils.load_instance import load_instance
 AGENTS = {}
 
 def initialize_agent(agent_id: str):
-    instance = load_instance("instances/1.json")
+    instance = load_instance("instances/50.json")
 
     # Generate initial feasible route with validation
     max_attempts = 100

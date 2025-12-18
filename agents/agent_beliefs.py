@@ -92,16 +92,27 @@ class AgentBeliefs:
     def get_all_action_scores(self, epsilon: float = 1.0) -> Dict[str, float]:
         """
         Returns a score for each action with minimum epsilon value for exploration.
-        The score balances success count and average improvement (normalized).
+        The score balances success count, success rate, and average improvement (normalized).
+        
+        The score is dynamic and changes even when there's no improvement, because
+        the success rate decreases with more unsuccessful attempts.
         
         epsilon: minimum score value added to all actions to ensure exploration
         """
         scores = {}
         for name, stats in self.actions.items():
-            # Normalized score: success count + normalized average improvement
-            # avg_improvement is divided by 100 to balance with times_success
+            # Success rate scaled to 0-10 range (primary factor for dynamic scoring)
+            success_rate_score = stats.success_rate * 10.0
+            
+            # Success count (absolute number of successes)
+            success_count = stats.times_success
+            
+            # Normalized average improvement (divided by 100 to balance)
             normalized_improvement = stats.avg_improvement / 100.0
-            base_score = stats.times_success + normalized_improvement
+            
+            # Combined score: success rate (primary) + success count + normalized improvement
+            base_score = success_rate_score + success_count + normalized_improvement
+            
             # Add epsilon to ensure all actions have a chance (exploration)
             scores[name] = base_score + epsilon
         return scores

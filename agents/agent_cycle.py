@@ -1,8 +1,9 @@
 from typing import Dict, Callable, Tuple, List
 
 from agents.agent_beliefs import AgentBeliefs
-from agents.shared.blackboard import global_best
+from agents.shared import blackboard
 from agents.methods.decision_method import decision_method
+from agents.utils.logger import get_logger
 
 from agents.methods.path_relinking import path_relinking
 from agents.problem.evaluator import evaluate_route
@@ -52,9 +53,10 @@ def run_agent_cycle(
     # ------------------------------------------------------------
     # 1 - Decision Method
     # ------------------------------------------------------------
-    print("1 - Decision Method")
-    action_name = decision_method(beliefs)
-    print("Metaheuristic to be executed: ", action_name)
+    logger = get_logger(beliefs.agent_id)
+    action_name = decision_method(beliefs, logger=logger)
+    logger.log_phase("[Decision Method] ")
+    logger.log(f"---> Chosen Metaheuristic: {action_name}")
     
     if action_name not in METAHEURISTICS:
         raise ValueError(f"[ERROR] Metaheuristic '{action_name}' is not registered")
@@ -63,13 +65,13 @@ def run_agent_cycle(
     # ------------------------------------------------------------
     # 2 - Execution of the Metaheuristic (Action)
     # ------------------------------------------------------------
-    print("2 - Execution of the Metaheuristic (Action)")
+    logger.log_phase(f"[Action - Execution of {action_name} ]")
     new_route, new_cost = action_fn(current_route, instance)
     
     # Validate feasibility of the solution returned by the metaheuristic
     feasible, validated_cost = evaluate_route(new_route, instance)
     if not feasible:
-        print(f"[WARNING] Metaheuristic '{action_name}' returned an infeasible solution. Keeping current solution.")
+        logger.log(f"[WARNING] Metaheuristic '{action_name}' returned an infeasible solution. Keeping current solution.")
         new_route, new_cost = current_route, current_cost
     else:
         new_cost = validated_cost  # Use validated cost
@@ -77,7 +79,7 @@ def run_agent_cycle(
     # ------------------------------------------------------------
     # 3 - Learning Method
     # ------------------------------------------------------------
-    print("3 - Learning Method")
+    logger.log_phase("[Learning Method - Updating beliefs after action]")
     beliefs.update_after_action(
         action_name=action_name,
         old_cost=current_cost,
@@ -89,8 +91,9 @@ def run_agent_cycle(
     # ------------------------------------------------------------
     # 4 - Velocity Operator (Path-Relinking)
     # ------------------------------------------------------------
-    print("4 - Velocity Operator (Path-Relinking)")
-    g_best_route, g_best_cost, _ = global_best.get()
+    logger.log_phase("[Velocity Operator (Path-Relinking)]")
+    # Access global_best from module to ensure we get the injected instance
+    g_best_route, g_best_cost, _ = blackboard.global_best.get()
 
     # If g_best does not exist, there is no diversification
     if g_best_route is not None:
@@ -110,7 +113,7 @@ def run_agent_cycle(
             intensification_method=opportunistic_intensification
         )
     else:
-        print("No g_best found, no diversification")
+        logger.log("No g_best found, no diversification")
         final_route, final_cost = new_route, new_cost
 
     beliefs.update_current_solution(final_route, final_cost)
@@ -118,17 +121,28 @@ def run_agent_cycle(
     # ------------------------------------------------------------
     # 5 - Update of p_best
     # ------------------------------------------------------------
-    print("5 - Update of p_best")
-    beliefs.try_update_pbest(final_route, final_cost)
-
+    logger.log_phase("[Update of p_best]")
+    old_p_best_cost = beliefs.p_best_cost
+    p_best_updated = beliefs.try_update_pbest(final_route, final_cost)
+    
+    if p_best_updated:
+        logger.log(f"---> p_best UPDATED: From {old_p_best_cost} to {beliefs.p_best_cost}")
+    
     # ------------------------------------------------------------
     # 6 - Update of g_best (Blackboard)
     # ------------------------------------------------------------
-    print("6 - Update of g_best (Blackboard)")
-    global_best.try_update(
+    logger.log_phase("[Update of g_best (Blackboard)]")
+    # Access global_best from module to ensure we get the injected instance
+    g_route_before, g_cost_before, g_agent_before = blackboard.global_best.get()
+    g_best_updated = blackboard.global_best.try_update(
         candidate_route=final_route,
         candidate_cost=final_cost,
         agent_id=beliefs.agent_id
     )
+    
+    if g_best_updated:
+        logger.log(f"---> g_best UPDATED: From {g_cost_before if g_cost_before != float('inf') else 'inf'} to {final_cost} (by agent {beliefs.agent_id})")
+    else:
+        current_g_cost = g_cost_before if g_cost_before != float('inf') else 'inf'
 
     return final_route, final_cost

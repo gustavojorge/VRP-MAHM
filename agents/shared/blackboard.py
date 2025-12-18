@@ -1,52 +1,70 @@
 from typing import List, Optional
+import copy
 from threading import Lock
 
 
 class GlobalBest:
-    def __init__(self):
-        self.route: Optional[List[int]] = None
-        self.cost: float = float("inf")
-        self.agent_id: Optional[str] = None
-        self._lock = Lock()
+    """
+    Classe para gerenciar o melhor global (g_best) compartilhado entre agentes.
+    
+    Suporta dois modos:
+    1. Single-threaded: usa Lock() padrão do threading
+    2. Multi-process: recebe um manager do multiprocessing
+    """
+    
+    def __init__(self, manager=None):
+        """
+        Inicializa GlobalBest.
+        
+        Args:
+            manager: Se fornecido (multiprocessing.Manager), usa estruturas compartilhadas.
+                     Se None, usa estruturas thread-safe para single-process.
+        """
+        if manager is not None:
+            # Modo multiprocessing
+            self._data = manager.dict({
+                "route": None,
+                "cost": float("inf"),
+                "agent_id": None
+            })
+            self._lock = manager.Lock()
+        else:
+            # Modo single-process (thread-safe)
+            self._data = {
+                "route": None,
+                "cost": float("inf"),
+                "agent_id": None
+            }
+            self._lock = Lock()
 
-    def try_update(
-        self,
-        candidate_route: List[int],
-        candidate_cost: float,
-        agent_id: str
-    ) -> bool:
-        """
-        Tenta atualizar o g_best de forma atômica.
-        Retorna True se atualizou.
-        """
+    def try_update(self, candidate_route, candidate_cost, agent_id):
+        """Tenta atualizar o g_best se o candidato for melhor"""
         with self._lock:
-            if candidate_cost < self.cost:
-                self.route = candidate_route.copy()
-                self.cost = candidate_cost
-                self.agent_id = agent_id
+            if candidate_cost < self._data["cost"]:
+                self._data["route"] = copy.deepcopy(candidate_route)
+                self._data["cost"] = candidate_cost
+                self._data["agent_id"] = agent_id
                 return True
         return False
 
     def get(self):
-        """
-        Retorna uma cópia segura do g_best atual.
-        """
+        """Retorna uma cópia segura do g_best atual"""
         with self._lock:
+            route = self._data["route"]
             return (
-                self.route.copy() if self.route else None,
-                self.cost,
-                self.agent_id
+                copy.deepcopy(route) if route else None,
+                self._data["cost"],
+                self._data["agent_id"]
             )
 
-    def has_solution(self) -> bool:
-        return self.route is not None
-
     def reset(self):
+        """Reseta o g_best"""
         with self._lock:
-            self.route = None
-            self.cost = float("inf")
-            self.agent_id = None
+            self._data["route"] = None
+            self._data["cost"] = float("inf")
+            self._data["agent_id"] = None
 
 
-# Singleton
+# Singleton para uso em single-agent
+# Para multi-agent, será substituído por uma instância com manager
 global_best = GlobalBest()

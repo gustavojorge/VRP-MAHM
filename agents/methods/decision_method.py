@@ -1,5 +1,5 @@
 import random
-from typing import Dict
+from typing import Dict, Optional
 
 from agents.agent_beliefs import AgentBeliefs
 
@@ -29,7 +29,8 @@ def roulette_wheel_selection(scores: Dict[str, float]) -> str:
 def decision_method(
     beliefs: AgentBeliefs,
     strategy: str = "roulette",
-    epsilon_exploration: float = 0.15
+    epsilon_exploration: float = 0.15,
+    logger: Optional[object] = None
 ) -> str:
     """
     Decide which metaheuristic the agent should execute.
@@ -56,7 +57,8 @@ def decision_method(
         
         # Exploitation: use scores with minimum epsilon value for exploration
         scores = beliefs.get_all_action_scores(epsilon=1.0)
-        print("Scores: ", scores)
+        if logger:
+            logger.log(f"Scores: {scores}")
         return roulette_wheel_selection(scores)
 
     raise ValueError(f"[ERROR] Unknown decision strategy: {strategy}")

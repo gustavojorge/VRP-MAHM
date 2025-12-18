@@ -89,17 +89,21 @@ class AgentBeliefs:
             raise ValueError(f"[ERROR] Action '{action_name}' is not registered")
         return self.actions[action_name]
 
-    def get_all_action_scores(self) -> Dict[str, float]:
+    def get_all_action_scores(self, epsilon: float = 1.0) -> Dict[str, float]:
         """
-        Returns a simple score for each action.
+        Returns a score for each action with minimum epsilon value for exploration.
         The score balances success count and average improvement (normalized).
+        
+        epsilon: minimum score value added to all actions to ensure exploration
         """
         scores = {}
         for name, stats in self.actions.items():
             # Normalized score: success count + normalized average improvement
             # avg_improvement is divided by 100 to balance with times_success
             normalized_improvement = stats.avg_improvement / 100.0
-            scores[name] = stats.times_success + normalized_improvement
+            base_score = stats.times_success + normalized_improvement
+            # Add epsilon to ensure all actions have a chance (exploration)
+            scores[name] = base_score + epsilon
         return scores
 
     def get_best_action(self) -> str:

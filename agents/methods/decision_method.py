@@ -28,15 +28,19 @@ def roulette_wheel_selection(scores: Dict[str, float]) -> str:
 
 def decision_method(
     beliefs: AgentBeliefs,
-    strategy: str = "roulette"
+    strategy: str = "roulette",
+    epsilon_exploration: float = 0.15
 ) -> str:
     """
     Decide which metaheuristic the agent should execute.
 
     strategy:
-        - "roulette" : proportional roulette
+        - "roulette" : proportional roulette with epsilon-greedy exploration
         - "greedy"   : best action at current state
         - "random"   : random choice
+    
+    epsilon_exploration: probability of random exploration (0.0 = pure exploitation, 1.0 = pure exploration)
+                         Default: 0.15 (15% exploration, 85% exploitation)
     """
 
     if strategy == "random":
@@ -46,7 +50,12 @@ def decision_method(
         return beliefs.get_best_action()
 
     if strategy == "roulette":
-        scores = beliefs.get_all_action_scores()
+        # Epsilon-greedy: randomly select an action with probability epsilon_exploration
+        if random.random() < epsilon_exploration:
+            return random.choice(list(beliefs.actions.keys()))
+        
+        # Exploitation: use scores with minimum epsilon value for exploration
+        scores = beliefs.get_all_action_scores(epsilon=1.0)
         print("Scores: ", scores)
         return roulette_wheel_selection(scores)
 

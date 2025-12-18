@@ -3,7 +3,7 @@ from typing import Dict, List, Optional
 
 class ActionStats:
     """
-    Estatísticas associadas a uma metaheurística (ação).
+    Statistics associated with a metaheuristic (action).
     """
 
     def __init__(self, name: str):
@@ -28,10 +28,10 @@ class ActionStats:
 
 class AgentBeliefs:
     """
-    Representa as crenças internas do agente sobre:
-    - desempenho das metaheurísticas
-    - estado atual
-    - melhor solução pessoal (p_best)
+    Represents the internal beliefs of the agent about:
+    - performance of the metaheuristics
+    - current state
+    - personal best solution (p_best)
     """
 
     def __init__(
@@ -41,21 +41,21 @@ class AgentBeliefs:
     ):
         self.agent_id = agent_id
 
-        # Estatísticas das ações (metaheurísticas)
+        # Statistics of the actions (metaheuristics)
         self.actions: Dict[str, ActionStats] = {
             name: ActionStats(name) for name in metaheuristics
         }
 
-        # Estado atual do agente
+        # Current state of the agent
         self.current_route: Optional[List[int]] = None
         self.current_cost: float = float("inf")
 
-        # Melhor solução pessoal (p_best)
+        # Personal best solution (p_best)
         self.p_best_route: Optional[List[int]] = None
         self.p_best_cost: float = float("inf")
 
     # ------------------------------------------------------------------
-    # Atualização após execução de uma ação (Learning Method)
+    # Update after execution of an action (Learning Method)
     # ------------------------------------------------------------------
 
     def update_after_action(
@@ -65,8 +65,11 @@ class AgentBeliefs:
         new_cost: float
     ) -> None:
         """
-        Atualiza as crenças após a execução de uma metaheurística.
+        Update the beliefs after the execution of a metaheuristic.
         """
+        if action_name not in self.actions:
+            raise ValueError(f"[ERROR] Action '{action_name}' is not registered")
+        
         stats = self.actions[action_name]
         stats.times_selected += 1
 
@@ -78,33 +81,38 @@ class AgentBeliefs:
             stats.total_improvement += improvement
 
     # ------------------------------------------------------------------
-    # Consulta para o Decision Method
+    # Queries for the Decision Method
     # ------------------------------------------------------------------
 
     def get_action_stats(self, action_name: str) -> ActionStats:
+        if action_name not in self.actions:
+            raise ValueError(f"[ERROR] Action '{action_name}' is not registered")
         return self.actions[action_name]
 
     def get_all_action_scores(self) -> Dict[str, float]:
         """
-        Retorna um score simples para cada ação.
-        Pode ser usado diretamente na roleta.
+        Returns a simple score for each action.
+        The score balances success count and average improvement (normalized).
         """
         scores = {}
         for name, stats in self.actions.items():
-            # Score simples: sucesso + melhoria média
-            scores[name] = stats.times_success + stats.avg_improvement
+            # Normalized score: success count + normalized average improvement
+            # avg_improvement is divided by 100 to balance with times_success
+            normalized_improvement = stats.avg_improvement / 100.0
+            scores[name] = stats.times_success + normalized_improvement
         return scores
 
     def get_best_action(self) -> str:
         """
-        Retorna a ação com maior score atual.
-        Usado para intensificação oportunista.
+        Returns the action with the highest current score.
         """
         scores = self.get_all_action_scores()
+        if not scores:
+            raise ValueError("[ERROR] No actions available to select")
         return max(scores, key=scores.get)
 
     # ------------------------------------------------------------------
-    # Estado do agente
+    # State of the agent
     # ------------------------------------------------------------------
 
     def update_current_solution(
@@ -112,7 +120,7 @@ class AgentBeliefs:
         route: List[int],
         cost: float
     ) -> None:
-        self.current_route = route
+        self.current_route = route.copy()
         self.current_cost = cost
 
     def try_update_pbest(

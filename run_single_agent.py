@@ -1,9 +1,8 @@
 from agents.main import initialize_agent, run_cycle, AGENTS
 from agents.shared.blackboard import global_best
 
-MAX_ITERATIONS = 50
+MAX_ITERATIONS = 10
 AGENT_ID = "agent1"
-
 
 def main():
     print("===================================")
@@ -15,18 +14,18 @@ def main():
 
     beliefs = AGENTS[AGENT_ID]["beliefs"]
 
-    print("\n--- Estado inicial ---")
-    print(f"Rota inicial: {beliefs.current_route}")
-    print(f"Custo inicial: {beliefs.current_cost}")
+    print("\n--- Initial state ---")
+    print(f"Initial Solution/Route: {beliefs.current_route}")
+    print(f"Initial Cost: {beliefs.current_cost}")
     print("----------------------\n")
 
     # Loop principal (simula o Jason)
     for it in range(MAX_ITERATIONS):
-        print(f"\n>>> ITERAÇÃO {it}")
+        print(f"\n>>> ITERATION {it}")
 
         run_cycle(AGENT_ID)
 
-        print(f"Custo atual : {beliefs.current_cost}")
+        print(f"Current Cost: {beliefs.current_cost}")
         print(f"p_best      : {beliefs.p_best_cost}")
 
         g_route, g_cost, g_agent = global_best.get()
@@ -38,14 +37,14 @@ def main():
     print("===================================")
 
     print("\n--- Resultado final ---")
-    print(f"p_best do agente : {beliefs.p_best_cost}")
-    print(f"Rota p_best     : {beliefs.p_best_route}")
+    print(f"Agent's p_best cost: {beliefs.p_best_cost}")
+    print(f"Agent's p_best solution/route: {beliefs.p_best_route}")
 
     g_route, g_cost, g_agent = global_best.get()
     print(f"\nGlobal Best:")
-    print(f"Custo : {g_cost}")
-    print(f"Rota  : {g_route}")
-    print(f"Agente: {g_agent}")
+    print(f"Cost : {g_cost}")
+    print(f"Solution/Route  : {g_route}")
+    print(f"Agent ID: {g_agent}")
 
 
 if __name__ == "__main__":

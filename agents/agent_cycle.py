@@ -7,23 +7,18 @@ from agents.methods.decision_method import decision_method
 from agents.methods.path_relinking import path_relinking
 from agents.problem.evaluator import evaluate_route
 
-# Metaheurísticas disponíveis
+# Available Metaheuristics
 from agents.actions.vnd.vnd import vnd
 from agents.actions.ils.ils import ils
 
-
-# ---------------------------------------------------------------------
-# Registro das metaheurísticas (Ações)
-# ---------------------------------------------------------------------
-
+# Metaheuristics (Actions) registry
 METAHEURISTICS: Dict[str, Callable[[List[int], dict], Tuple[List[int], float]]] = {
     "VND": vnd,
     "ILS": ils,
 }
 
-
 # ---------------------------------------------------------------------
-# Ciclo Cognitivo do Agente
+# Agent Cognitive Cycle
 # ---------------------------------------------------------------------
 
 def run_agent_cycle(
@@ -31,43 +26,54 @@ def run_agent_cycle(
     instance: dict
 ) -> Tuple[List[int], float]:
     """
-    Executa UMA iteração completa do agente, seguindo o ciclo:
+    Runs a complete iteration of the agent, following the cycle:
 
     1. Decision Method
-    2. Execução da Metaheurística
+    2. Execution of the Metaheuristic
     3. Learning Method
-    4. Velocity Operator (Path-Relinking + Intensificação Oportunista)
-    5. Atualização do p_best
-    6. Atualização do g_best
+    4. Velocity Operator (Path-Relinking)
+    5. Update of p_best
+    6. Update of g_best
 
-    Retorna a nova posição final do agente.
+    Returns the final position of the agent.
     """
 
     # ------------------------------------------------------------
-    # Estado inicial
+    # Initial state
     # ------------------------------------------------------------
     current_route = beliefs.current_route
     current_cost = beliefs.current_cost
 
     if current_route is None:
-        raise ValueError("Agente sem solução inicial definida")
+        raise ValueError("[ERROR] Agent without initial solution defined")
 
     # ------------------------------------------------------------
-    # 1️⃣ Decision Method
+    # 1 - Decision Method
     # ------------------------------------------------------------
-    print("1 - Decision Method.")
+    print("1 - Decision Method")
     action_name = decision_method(beliefs)
-    print("Metaheurística a ser executada: ", action_name)
+    print("Metaheuristic to be executed: ", action_name)
+    
+    if action_name not in METAHEURISTICS:
+        raise ValueError(f"[ERROR] Metaheuristic '{action_name}' is not registered")
     action_fn = METAHEURISTICS[action_name]
 
     # ------------------------------------------------------------
-    # 2️⃣ Execução da Metaheurística (Ação)
+    # 2 - Execution of the Metaheuristic (Action)
     # ------------------------------------------------------------
-    print("2 - Execução da Metaheurística (Ação)")
+    print("2 - Execution of the Metaheuristic (Action)")
     new_route, new_cost = action_fn(current_route, instance)
+    
+    # Validate feasibility of the solution returned by the metaheuristic
+    feasible, validated_cost = evaluate_route(new_route, instance)
+    if not feasible:
+        print(f"[WARNING] Metaheuristic '{action_name}' returned an infeasible solution. Keeping current solution.")
+        new_route, new_cost = current_route, current_cost
+    else:
+        new_cost = validated_cost  # Use validated cost
 
     # ------------------------------------------------------------
-    # 3️⃣ Learning Method
+    # 3 - Learning Method
     # ------------------------------------------------------------
     print("3 - Learning Method")
     beliefs.update_after_action(
@@ -79,18 +85,18 @@ def run_agent_cycle(
     beliefs.update_current_solution(new_route, new_cost)
 
     # ------------------------------------------------------------
-    # 4️⃣ Velocity Operator (Path-Relinking)
+    # 4 - Velocity Operator (Path-Relinking)
     # ------------------------------------------------------------
     print("4 - Velocity Operator (Path-Relinking)")
     g_best_route, g_best_cost, _ = global_best.get()
 
-    # Se ainda não existe g_best, não há diversificação
+    # If g_best does not exist, there is no diversification
     if g_best_route is not None:
 
         def opportunistic_intensification(route, instance):
             """
-            Intensificação oportunista:
-            escolhe a melhor metaheurística segundo as crenças atuais.
+            Opportunistic intensification:
+            choose the best metaheuristic according to the current beliefs.
             """
             best_action = beliefs.get_best_action()
             return METAHEURISTICS[best_action](route, instance)
@@ -102,20 +108,21 @@ def run_agent_cycle(
             intensification_method=opportunistic_intensification
         )
     else:
+        print("No g_best found, no diversification")
         final_route, final_cost = new_route, new_cost
 
     beliefs.update_current_solution(final_route, final_cost)
 
     # ------------------------------------------------------------
-    # 5️⃣ Atualização do p_best
+    # 5 - Update of p_best
     # ------------------------------------------------------------
-    print("5 - Atualização do p_best")
+    print("5 - Update of p_best")
     beliefs.try_update_pbest(final_route, final_cost)
 
     # ------------------------------------------------------------
-    # 6️⃣ Atualização do g_best (Blackboard)
+    # 6 - Update of g_best (Blackboard)
     # ------------------------------------------------------------
-    print("6 - Atualização do g_best (Blackboard)")
+    print("6 - Update of g_best (Blackboard)")
     global_best.try_update(
         candidate_route=final_route,
         candidate_cost=final_cost,

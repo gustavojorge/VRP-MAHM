@@ -1,4 +1,5 @@
 from typing import Dict, Callable, Tuple, List
+import random
 
 from src.agent_beliefs import AgentBeliefs
 from src.shared import blackboard
@@ -99,12 +100,47 @@ def run_agent_cycle(
     # 4 - Velocity Operator (Path-Relinking)
     # ------------------------------------------------------------
     logger.log_phase("[Velocity Operator (Path-Relinking)]")
-    # Access global_best from module to ensure we get the injected instance
+    
+    # Get both p_best and g_best
+    p_best_route, p_best_cost = beliefs.p_best_route, beliefs.p_best_cost
     g_best_route, g_best_cost, _ = blackboard.global_best.get()
-
-    # If g_best does not exist, there is no diversification
-    if g_best_route is not None:
-
+    
+    # Store origin cost before path-relinking (cost after metaheuristic)
+    origin_cost = new_cost
+    
+    # Initialize final solution as the result from metaheuristic
+    final_route, final_cost = new_route, new_cost
+    
+    # Select target based on probabilities
+    target_route = None
+    used_p_best = False
+    
+    if p_best_route is not None and g_best_route is not None:
+        # Both exist: use probability-based selection
+        if random.random() < beliefs.path_relinking_prob_p_best:
+            target_route = p_best_route
+            used_p_best = True
+            logger.log(f"---> Selected target: p_best (prob_p_best={beliefs.path_relinking_prob_p_best:.3f})")
+        else:
+            target_route = g_best_route
+            used_p_best = False
+            logger.log(f"---> Selected target: g_best (prob_g_best={beliefs.path_relinking_prob_g_best:.3f})")
+    elif p_best_route is not None:
+        # Only p_best exists: use it as fallback
+        target_route = p_best_route
+        used_p_best = True
+        logger.log("---> Selected target: p_best (g_best not available, using fallback)")
+    elif g_best_route is not None:
+        # Only g_best exists: use it as fallback
+        target_route = g_best_route
+        used_p_best = False
+        logger.log("---> Selected target: g_best (p_best not available, using fallback)")
+    else:
+        # Neither exists: skip path-relinking
+        logger.log("---> No p_best or g_best found, skipping path-relinking")
+    
+    # Execute path-relinking if target is available
+    if target_route is not None:
         def opportunistic_intensification(route, instance):
             """
             Opportunistic intensification:
@@ -124,13 +160,24 @@ def run_agent_cycle(
 
         final_route, final_cost = path_relinking(
             origin=new_route,
-            target=g_best_route,
+            target=target_route,
             instance=instance,
             intensification_method=opportunistic_intensification
         )
-    else:
-        logger.log("---> No g_best found, no diversification")
-        final_route, final_cost = new_route, new_cost
+        
+        # Check for improvement
+        improved = final_cost < origin_cost
+        
+        # Update probabilities based on result
+        beliefs.update_path_relinking_probabilities(used_p_best, improved)
+        
+        # Log results
+        if improved:
+            logger.log(f"---> Path-relinking IMPROVED: {origin_cost:.2f} -> {final_cost:.2f}")
+        else:
+            logger.log(f"---> Path-relinking NO improvement: {origin_cost:.2f} -> {final_cost:.2f}")
+        
+        logger.log(f"---> Updated probabilities: prob_p_best={beliefs.path_relinking_prob_p_best:.3f}, prob_g_best={beliefs.path_relinking_prob_g_best:.3f}")
 
     beliefs.update_current_solution(final_route, final_cost)
 

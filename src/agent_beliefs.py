@@ -54,6 +54,10 @@ class AgentBeliefs:
         self.p_best_route: Optional[List[int]] = None
         self.p_best_cost: float = float("inf")
 
+        # Path-relinking target selection probabilities
+        self.path_relinking_prob_p_best: float = 0.9
+        self.path_relinking_prob_g_best: float = 0.1
+
     # ------------------------------------------------------------------
     # Update after execution of an action (Learning Method)
     # ------------------------------------------------------------------
@@ -148,3 +152,42 @@ class AgentBeliefs:
             self.p_best_route = route.copy()
             return True
         return False
+
+    # ------------------------------------------------------------------
+    # Path-Relinking Target Selection
+    # ------------------------------------------------------------------
+
+    def update_path_relinking_probabilities(
+        self,
+        used_p_best: bool,
+        improved: bool,
+        step_size: float = 0.05
+    ) -> None:
+        """
+        Update probabilities based on path-relinking result.
+        
+        Args:
+            used_p_best: True if p_best was used, False if g_best was used
+            improved: True if path-relinking produced improvement (new_cost < origin_cost)
+            step_size: Amount to increase/decrease probabilities (default 0.05)
+        """
+        # If one probability is already at 1.0, stop updating
+        if self.path_relinking_prob_p_best >= 1.0 or self.path_relinking_prob_g_best >= 1.0:
+            return
+        
+        if improved:
+            # Increase probability of the selected target
+            if used_p_best:
+                self.path_relinking_prob_p_best = min(1.0, self.path_relinking_prob_p_best + step_size)
+                self.path_relinking_prob_g_best = max(0.0, 1.0 - self.path_relinking_prob_p_best)
+            else:
+                self.path_relinking_prob_g_best = min(1.0, self.path_relinking_prob_g_best + step_size)
+                self.path_relinking_prob_p_best = max(0.0, 1.0 - self.path_relinking_prob_g_best)
+        else:
+            # Decrease probability of the selected target
+            if used_p_best:
+                self.path_relinking_prob_p_best = max(0.0, self.path_relinking_prob_p_best - step_size)
+                self.path_relinking_prob_g_best = min(1.0, 1.0 - self.path_relinking_prob_p_best)
+            else:
+                self.path_relinking_prob_g_best = max(0.0, self.path_relinking_prob_g_best - step_size)
+                self.path_relinking_prob_p_best = min(1.0, 1.0 - self.path_relinking_prob_p_best)

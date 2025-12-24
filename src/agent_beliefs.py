@@ -30,7 +30,7 @@ class AgentBeliefs:
     """
     Represents the internal beliefs of the agent about:
     - performance of the metaheuristics
-    - current state
+    - current state/position
     - personal best solution (p_best)
     """
 

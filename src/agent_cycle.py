@@ -129,7 +129,7 @@ def run_agent_cycle(
             intensification_method=opportunistic_intensification
         )
     else:
-        logger.log("No g_best found, no diversification")
+        logger.log("---> No g_best found, no diversification")
         final_route, final_cost = new_route, new_cost
 
     beliefs.update_current_solution(final_route, final_cost)

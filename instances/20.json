@@ -1,6 +1,6 @@
 {
-  "instance_id": "SUNT_VRP_MOCK_020",
-  "description": "Simulated VRP instance for Minimum Total Travel Time - 20 nodes",
+  "instance_id": "SUNT_VRP_020",
+  "description": "Simulated VRP instance for Minimum Total Travel Time",
   "num_nodes": 20,
   "time_unit": "minutes",
   "vehicle_fleet": {

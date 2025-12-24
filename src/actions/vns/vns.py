@@ -15,18 +15,18 @@ def vns(
     max_shake_tries: int = 10,
 ) -> Tuple[List[int], float]:
     """
-    Variable Neighborhood Search (VNS) básico
+    Variable Neighborhood Search (VNS)
 
-    Estratégia:
-    - Para cada iteração, percorre-se a lista de vizinhanças (shaking)
-    - Para cada vizinhança aplica-se um movimento aleatório (shaking)
-    - Aplica-se uma intensificação com VND a partir da solução perturbada
-    - Se houver melhoria a solução corrente é atualizada e reiniciam-se as vizinhanças
+    Strategy:
+    - For each iteration, traverse the list of neighborhoods (shaking)
+    - For each neighborhood, apply a random movement (shaking)
+    - Apply an intensification with VND from the perturbed solution
+    - If there is improvement, the current solution is updated and the neighborhoods are restarted
 
-    Parâmetros:
-    - max_iterations: número máximo de iterações (cada iteração tenta todas as vizinhanças)
-    - seed: semente opcional para reprodutibilidade
-    - max_shake_tries: número de tentativas para gerar um vizinho viável na fase de shaking
+    Parameters:
+    - max_iterations: maximum number of iterations (each iteration tries all neighborhoods)
+    - seed: optional seed for reproducibility
+    - max_shake_tries: number of tries to generate a feasible neighbor in the shaking phase
     """
 
     if seed is not None:
@@ -37,10 +37,10 @@ def vns(
         two_opt_neighborhood,
     ]
 
-    # Avaliação inicial
+    # Initial evaluation
     feasible, current_cost = evaluate_route(initial_route, instance)
     if not feasible:
-        raise ValueError("VNS recebeu uma rota inicial inviável")
+        raise ValueError("VNS received an infeasible initial route")
 
     current_route = initial_route.copy()
 
@@ -48,12 +48,12 @@ def vns(
     best_cost = current_cost
 
     for it in range(max_iterations):
-        # percorre vizinhanças
+        # traverse neighborhoods
         k = 0
         while k < len(neighborhoods):
             neighborhood = neighborhoods[k]
 
-            # shaking: tenta gerar um vizinho viável aleatório
+            # shaking: try to generate a random feasible neighbor
             shaken_route = None
             for _ in range(max_shake_tries):
                 neighbors = neighborhood(current_route)
@@ -66,14 +66,14 @@ def vns(
                     break
 
             if shaken_route is None:
-                # não foi possível gerar um vizinho viável nesta vizinhança
+                # it was not possible to generate a feasible neighbor in this neighborhood
                 k += 1
                 continue
 
-            # intensificação com VND
+            # intensification with VND
             new_route, new_cost = vnd(shaken_route, instance)
 
-            # aceitação se melhorar
+            # acceptance if improved
             if new_cost < current_cost:
                 current_route = new_route
                 current_cost = new_cost
@@ -82,7 +82,7 @@ def vns(
                     best_route = new_route
                     best_cost = new_cost
 
-                # reinicia vizinhanças
+                # restart neighborhoods
                 k = 0
             else:
                 k += 1

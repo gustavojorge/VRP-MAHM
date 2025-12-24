@@ -5,10 +5,10 @@ def generate_random_feasible_route(instance: dict) -> list[int]:
     trip_time = instance["trip_time_matrix"]
     max_capacity = instance["vehicle_fleet"]["max_capacity"]
 
-    # Nós ativos (exclui o depósito 0)
+    # Active nodes (excluding the depot 0)
     active_nodes = [n["id"] for n in nodes if n["id"] != 0]
 
-    route = [0]  # começa no depósito
+    route = [0]  # starts at the depot
     pending = active_nodes.copy()
     current_load = 0
 
@@ -23,13 +23,13 @@ def generate_random_feasible_route(instance: dict) -> list[int]:
                 candidates.append((v, new_load))
 
         if not candidates:
-            raise RuntimeError("Não foi possível gerar rota viável (Vcandidato vazio).")
+            raise RuntimeError("It was not possible to generate a feasible route (empty candidate).")
 
         chosen, new_load = random.choice(candidates)
         route.append(chosen)
         pending.remove(chosen)
         current_load = new_load
 
-    route.append(0)  # fecha o ciclo
+    route.append(0)  # closes the cycle
     return route
 

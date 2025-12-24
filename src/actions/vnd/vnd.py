@@ -11,7 +11,6 @@ def vnd(
 ) -> Tuple[List[int], float]:
     """
     Variable Neighborhood Descent (VND)
-    com verificação explícita de viabilidade
     """
 
     neighborhoods: List[Callable[[List[int]], List[List[int]]]] = [
@@ -19,10 +18,10 @@ def vnd(
         two_opt_neighborhood
     ]
 
-    # Avaliação inicial
+    # Initial evaluation
     feasible, current_cost = evaluate_route(initial_route, instance)
     if not feasible:
-        raise ValueError("VND recebeu uma rota inicial inviável")
+        raise ValueError("VND received an infeasible initial route")
 
     current_route = initial_route.copy()
     k = 0
@@ -36,7 +35,7 @@ def vnd(
         for neighbor in neighborhood(current_route):
             feasible, cost = evaluate_route(neighbor, instance)
 
-            # Filtro de viabilidade
+            # Feasibility filter
             if not feasible:
                 continue
 

@@ -3,7 +3,7 @@ from typing import List
 
 def perturb_route(route: List[int], k: int = 2) -> List[int]:
     """
-    Aplica k swaps aleatórios na rota (mantendo depósito fixo)
+    Apply k random swaps in the route (keeping the depot fixed)
     """
     new_route = route.copy()
     internal = new_route[1:-1]

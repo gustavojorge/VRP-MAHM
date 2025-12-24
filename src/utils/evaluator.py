@@ -4,8 +4,8 @@ from src.utils.compute_route_cost import compute_route_cost
 
 def evaluate_route(route: list[int], instance: dict) -> tuple[bool, float]:
     """
-    Retorna (viável, custo).
-    Se inviável, custo = infinito.
+    Returns (feasible, cost).
+    If infeasible, cost = infinity.
     """
     feasible = is_feasible_route(route, instance)
 

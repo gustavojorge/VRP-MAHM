@@ -13,6 +13,7 @@ import multiprocessing as mp
 import os
 import csv
 import argparse
+import time
 from pathlib import Path
 from typing import List, Tuple, Dict, Optional, Union, Any
 
@@ -167,7 +168,8 @@ def initialize_agent_with_metaheuristics(agent_id: str, instance_path: str, meta
 
 
 def agent_worker(agent_id: str, max_iterations: int, global_blackboard: GlobalBest, 
-                 instance_path: str, instance_name: str, metaheuristics: List[str], action_name: str):
+                 instance_path: str, instance_name: str, metaheuristics: List[str], action_name: str,
+                 agent_times: Dict[str, float]):
     """
     Worker function for each agent process.
     
@@ -179,6 +181,7 @@ def agent_worker(agent_id: str, max_iterations: int, global_blackboard: GlobalBe
         instance_name: Name of the instance (for logging)
         metaheuristics: List of metaheuristics to use (restricts agent to only these)
         action_name: Name of the action (e.g., 'mahm', 'ils', 'vnd', 'vns') for logging directory
+        agent_times: Shared dictionary to store execution times for each agent
     """
     # Inject the shared blackboard into the module
     import src.shared.blackboard
@@ -189,6 +192,9 @@ def agent_worker(agent_id: str, max_iterations: int, global_blackboard: GlobalBe
     
     # Initialize logger for this agent
     logger = get_logger(agent_id, instance_name, action_name)
+    
+    # Start timing
+    start_time = time.time()
     
     logger.log("===================================")
     logger.log(" STARTING AGENT EXECUTION ")
@@ -242,6 +248,64 @@ def agent_worker(agent_id: str, max_iterations: int, global_blackboard: GlobalBe
     logger.log(f"\nGlobal Best:")
     logger.log(f"Cost : {g_cost}")
     logger.log(f"Solution/Route  : {g_route}")
+    
+    # Calculate and log execution time
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    logger.log(f"\nRun Time: {elapsed_time:.2f} seconds ({elapsed_time/60:.2f} minutes)")
+    
+    # Store execution time in shared dictionary
+    agent_times[agent_id] = elapsed_time
+
+
+def write_outcome_log(instance_name: str, action_name: str, num_agents: int, 
+                      g_best_cost: Optional[float], g_best_agent: Optional[str], 
+                      total_time: float):
+    """
+    Write outcome log file with experiment summary.
+    
+    Args:
+        instance_name: Name of the instance
+        action_name: Name of the action (e.g., 'mahm', 'ils', 'vnd', 'vns')
+        num_agents: Number of agents used
+        g_best_cost: Best cost found (global best)
+        g_best_agent: Agent ID that found the global best
+        total_time: Total execution time (sum of all agent times)
+    """
+    log_dir = f"logs/{instance_name}/{action_name.lower()}"
+    outcome_file = f"{log_dir}/outcome.log"
+    
+    # Create directory if it doesn't exist
+    os.makedirs(log_dir, exist_ok=True)
+    
+    with open(outcome_file, 'w', encoding='utf-8') as f:
+        f.write("=" * 80 + "\n")
+        f.write(" EXPERIMENT OUTCOME SUMMARY\n")
+        f.write("=" * 80 + "\n\n")
+        f.write(f"Instance: {instance_name}\n")
+        f.write(f"Action: {action_name.upper()}\n")
+        f.write(f"Number of Agents: {num_agents}\n\n")
+        
+        f.write("-" * 80 + "\n")
+        f.write("GLOBAL BEST SOLUTION\n")
+        f.write("-" * 80 + "\n")
+        if g_best_cost is not None:
+            f.write(f"Best Cost: {g_best_cost:.2f}\n")
+            if g_best_agent is not None:
+                f.write(f"Found by Agent: {g_best_agent}\n")
+            else:
+                f.write("Found by Agent: N/A\n")
+        else:
+            f.write("Best Cost: N/A (No solution found)\n")
+            f.write("Found by Agent: N/A\n")
+        
+        f.write("\n" + "-" * 80 + "\n")
+        f.write("EXECUTION TIME\n")
+        f.write("-" * 80 + "\n")
+        f.write(f"Total Time: {total_time:.2f} seconds ({total_time/60:.2f} minutes)\n")
+        f.write(f"Average Time per Agent: {total_time/num_agents:.2f} seconds\n")
+        
+        f.write("\n" + "=" * 80 + "\n")
 
 
 def run_experiment_for_instance(instance_path: str, instance_name: str, metaheuristics: List[str], 
@@ -263,6 +327,7 @@ def run_experiment_for_instance(instance_path: str, instance_name: str, metaheur
     
     manager = mp.Manager()
     global_blackboard = GlobalBest(manager)
+    agent_times = manager.dict()  # Shared dictionary for agent execution times
     
     # Determine action name for logging directory
     action_name = get_action_name(metaheuristics)
@@ -273,7 +338,7 @@ def run_experiment_for_instance(instance_path: str, instance_name: str, metaheur
     for i in range(num_agents):
         p = mp.Process(
             target=agent_worker,
-            args=(f"agent_{i}", max_iterations, global_blackboard, instance_path, instance_name, metaheuristics, action_name)
+            args=(f"agent_{i}", max_iterations, global_blackboard, instance_path, instance_name, metaheuristics, action_name, agent_times)
         )
         p.start()
         processes.append(p)
@@ -284,6 +349,12 @@ def run_experiment_for_instance(instance_path: str, instance_name: str, metaheur
     
     # Get final result
     g_route, g_cost, g_agent = global_blackboard.get()
+    
+    # Calculate total execution time (sum of all agent times)
+    total_time = sum(agent_times.values()) if agent_times else 0.0
+    
+    # Write outcome log file
+    write_outcome_log(instance_name, action_name, num_agents, g_cost, g_agent, total_time)
     
     # Clear AGENTS registry for next experiment
     AGENTS.clear()

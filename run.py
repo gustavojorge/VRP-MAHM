@@ -4,7 +4,7 @@ Unified script for running multi-agent VRP experiments.
 
 This script consolidates all execution modes into a single parameterized interface:
 - Single or multiple instance execution
-- Configurable metaheuristics (all or specific)
+- Configurable metaheuristics (mahm for all, or specific: ils, vnd, vns)
 - Adaptive CSV output
 - Structured logging per instance
 """
@@ -14,7 +14,7 @@ import os
 import csv
 import argparse
 from pathlib import Path
-from typing import List, Tuple, Dict, Optional
+from typing import List, Tuple, Dict, Optional, Union, Any
 
 from src.shared.blackboard import GlobalBest
 from src.main import initialize_agent, run_cycle, AGENTS
@@ -27,7 +27,7 @@ from src.utils.load_instance import load_instance
 # Default configuration
 DEFAULT_NUM_AGENTS = 5
 DEFAULT_MAX_ITERATIONS = 20
-DEFAULT_ACTIONS = "all"
+DEFAULT_ACTIONS = "mahm"
 
 # Available metaheuristics
 AVAILABLE_METAHEURISTICS = ["VND", "ILS", "VNS"]
@@ -38,14 +38,14 @@ def normalize_action_name(action: str) -> str:
     Convert action name to uppercase standard format.
     
     Args:
-        action: Action name (e.g., 'ils', 'ILS', 'Ils')
+        action: Action name (e.g., 'ils', 'ILS', 'Ils', 'mahm', 'MAHM')
     
     Returns:
-        Normalized action name (e.g., 'ILS')
+        Normalized action name (e.g., 'ILS', 'MAHM')
     """
     action_upper = action.upper()
-    if action_upper not in AVAILABLE_METAHEURISTICS and action_upper != "ALL":
-        raise ValueError(f"Invalid action '{action}'. Must be one of: 'all', 'ils', 'vnd', 'vns'")
+    if action_upper not in AVAILABLE_METAHEURISTICS and action_upper != "MAHM":
+        raise ValueError(f"Invalid action '{action}'. Must be one of: 'mahm', 'ils', 'vnd', 'vns'")
     return action_upper
 
 
@@ -54,17 +54,36 @@ def get_metaheuristics_list(actions_param: str) -> List[str]:
     Convert --actions parameter to list of metaheuristic names.
     
     Args:
-        actions_param: Action parameter ('all', 'ils', 'vnd', or 'vns')
+        actions_param: Action parameter ('mahm', 'ils', 'vnd', or 'vns')
     
     Returns:
         List of metaheuristic names (e.g., ['VND', 'ILS', 'VNS'] or ['ILS'])
     """
     normalized = normalize_action_name(actions_param)
     
-    if normalized == "ALL":
+    if normalized == "MAHM":
         return AVAILABLE_METAHEURISTICS.copy()
     else:
         return [normalized]
+
+
+def get_action_name(metaheuristics: List[str]) -> str:
+    """
+    Determine the action name based on the list of metaheuristics.
+    
+    Args:
+        metaheuristics: List of metaheuristic names
+    
+    Returns:
+        Action name: 'mahm' if all metaheuristics, otherwise the single metaheuristic name (lowercase)
+    """
+    if len(metaheuristics) == len(AVAILABLE_METAHEURISTICS):
+        return "mahm"
+    elif len(metaheuristics) == 1:
+        return metaheuristics[0].lower()
+    else:
+        # Multiple but not all - use 'mahm' as default
+        return "mahm"
 
 
 def get_instance_files(instances_dir: str = "instances", instance_name: Optional[str] = None) -> List[Tuple[str, str]]:
@@ -148,7 +167,7 @@ def initialize_agent_with_metaheuristics(agent_id: str, instance_path: str, meta
 
 
 def agent_worker(agent_id: str, max_iterations: int, global_blackboard: GlobalBest, 
-                 instance_path: str, instance_name: str, metaheuristics: List[str]):
+                 instance_path: str, instance_name: str, metaheuristics: List[str], action_name: str):
     """
     Worker function for each agent process.
     
@@ -159,16 +178,17 @@ def agent_worker(agent_id: str, max_iterations: int, global_blackboard: GlobalBe
         instance_path: Path to the instance file
         instance_name: Name of the instance (for logging)
         metaheuristics: List of metaheuristics to use (restricts agent to only these)
+        action_name: Name of the action (e.g., 'mahm', 'ils', 'vnd', 'vns') for logging directory
     """
     # Inject the shared blackboard into the module
     import src.shared.blackboard
     src.shared.blackboard.global_best = global_blackboard
     
-    # Set instance name for logging
-    set_instance_name(instance_name)
+    # Set instance name and action name for logging
+    set_instance_name(instance_name, action_name)
     
     # Initialize logger for this agent
-    logger = get_logger(agent_id, instance_name)
+    logger = get_logger(agent_id, instance_name, action_name)
     
     logger.log("===================================")
     logger.log(" STARTING AGENT EXECUTION ")
@@ -244,13 +264,16 @@ def run_experiment_for_instance(instance_path: str, instance_name: str, metaheur
     manager = mp.Manager()
     global_blackboard = GlobalBest(manager)
     
+    # Determine action name for logging directory
+    action_name = get_action_name(metaheuristics)
+    
     processes = []
     
     # Create and start processes for each agent
     for i in range(num_agents):
         p = mp.Process(
             target=agent_worker,
-            args=(f"agent_{i}", max_iterations, global_blackboard, instance_path, instance_name, metaheuristics)
+            args=(f"agent_{i}", max_iterations, global_blackboard, instance_path, instance_name, metaheuristics, action_name)
         )
         p.start()
         processes.append(p)
@@ -288,13 +311,13 @@ def read_existing_csv(csv_filename: str) -> Dict[str, Dict[str, str]]:
     return existing_data
 
 
-def write_adaptive_csv(results: Dict[str, Dict[str, Optional[float]]], csv_filename: str, 
+def write_adaptive_csv(results: Dict[str, Dict[str, Union[Optional[float], int, str]]], csv_filename: str, 
                        executed_metaheuristics: List[str]):
     """
     Write CSV with adaptive columns based on executed metaheuristics.
     
     Args:
-        results: Dictionary mapping instance names to their results (metaheuristic -> cost)
+        results: Dictionary mapping instance names to their results (metaheuristic -> cost, "# vertices" -> num_nodes)
         csv_filename: Path to CSV file
         executed_metaheuristics: List of metaheuristics that were executed
     """
@@ -303,15 +326,15 @@ def write_adaptive_csv(results: Dict[str, Dict[str, Optional[float]]], csv_filen
     
     # Determine column name based on executed metaheuristics
     if len(executed_metaheuristics) == len(AVAILABLE_METAHEURISTICS):
-        # All metaheuristics were executed, use "All" column
-        column_name = "All"
+        # All metaheuristics were executed, use "MAHM" column
+        column_name = "MAHM"
     elif len(executed_metaheuristics) == 1:
         # Single metaheuristic, use its name
         column_name = executed_metaheuristics[0]
     else:
-        # Multiple but not all - use comma-separated names or "All"
-        # For simplicity, use "All" if multiple are executed
-        column_name = "All"
+        # Multiple but not all - use comma-separated names or "MAHM"
+        # For simplicity, use "MAHM" if multiple are executed
+        column_name = "MAHM"
     
     # Update existing data with new results
     for instance_name, instance_results in results.items():
@@ -324,14 +347,19 @@ def write_adaptive_csv(results: Dict[str, Dict[str, Optional[float]]], csv_filen
             existing_data[instance_name][column_name] = f"{cost:.2f}"
         else:
             existing_data[instance_name][column_name] = "N/A"
+        
+        # Update "# vertices" column
+        num_vertices = instance_results.get("# vertices")
+        if num_vertices is not None:
+            existing_data[instance_name]["# vertices"] = str(num_vertices)
     
-    # Determine all columns (Instance + all unique metaheuristic columns)
-    all_columns = set(['Instance'])
+    # Determine all columns (Instance + # vertices + all unique metaheuristic columns)
+    all_columns = set(['Instance', '# vertices'])
     for instance_data in existing_data.values():
         all_columns.update(instance_data.keys())
     
-    # Sort columns: Instance first, then alphabetically
-    sorted_columns = ['Instance'] + sorted([c for c in all_columns if c != 'Instance'])
+    # Sort columns: Instance first, then "# vertices", then alphabetically
+    sorted_columns = ['Instance', '# vertices'] + sorted([c for c in all_columns if c not in ['Instance', '# vertices']])
     
     # Write CSV
     with open(csv_filename, 'w', newline='') as csvfile:
@@ -357,10 +385,10 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Run all instances with all metaheuristics (default)
+  # Run all instances with all metaheuristics (MAHM - default)
   python run.py
   
-  # Run specific instance with all metaheuristics
+  # Run specific instance with all metaheuristics (MAHM)
   python run.py --instance 1
   
   # Run all instances with only ILS
@@ -396,7 +424,7 @@ Examples:
         "--actions",
         type=str,
         default=DEFAULT_ACTIONS,
-        help="Metaheuristic selection: 'all', 'ils', 'vnd', or 'vns' (default: 'all')"
+        help="Metaheuristic selection: 'mahm', 'ils', 'vnd', or 'vns' (default: 'mahm')"
     )
     
     args = parser.parse_args()
@@ -421,11 +449,11 @@ Examples:
     
     # Determine column name for CSV
     if len(metaheuristics) == len(AVAILABLE_METAHEURISTICS):
-        column_name = "All"
+        column_name = "MAHM"
     elif len(metaheuristics) == 1:
         column_name = metaheuristics[0]
     else:
-        column_name = "All"
+        column_name = "MAHM"
     
     print("=" * 80)
     print(" UNIFIED MULTI-AGENT VRP EXPERIMENT")
@@ -439,7 +467,7 @@ Examples:
     print("=" * 80)
     print()
     
-    # Results dictionary: {instance_name: {column_name: cost}}
+    # Results dictionary: {instance_name: {column_name: cost, "# vertices": num_nodes}}
     results = {}
     
     # Run experiments
@@ -447,11 +475,18 @@ Examples:
         print(f"[{idx}/{len(instance_files)}] Executando instância {instance_name}...", end=" ", flush=True)
         
         try:
+            # Load instance to get num_nodes
+            instance = load_instance(instance_path)
+            num_nodes = instance.get("num_nodes", "N/A")
+            
             g_cost = run_experiment_for_instance(
                 instance_path, instance_name, metaheuristics, args.n_agents, args.max_iterations
             )
             
-            results[instance_name] = {column_name: g_cost}
+            results[instance_name] = {
+                column_name: g_cost,
+                "# vertices": num_nodes
+            }
             
             if g_cost is not None:
                 print(f"✓ Custo: {g_cost}")
@@ -460,7 +495,16 @@ Examples:
                 
         except Exception as e:
             print(f"❌ Erro: {e}")
-            results[instance_name] = {column_name: None}
+            # Try to get num_nodes even if experiment failed
+            try:
+                instance = load_instance(instance_path)
+                num_nodes = instance.get("num_nodes", "N/A")
+            except:
+                num_nodes = "N/A"
+            results[instance_name] = {
+                column_name: None,
+                "# vertices": num_nodes
+            }
             import traceback
             traceback.print_exc()
     
@@ -483,15 +527,18 @@ Examples:
     existing_data = read_existing_csv(csv_filename)
     if existing_data:
         # Get all columns
-        all_columns = set(['Instance'])
+        all_columns = set(['Instance', '# vertices'])
         for instance_data in existing_data.values():
             all_columns.update(instance_data.keys())
-        sorted_columns = ['Instance'] + sorted([c for c in all_columns if c != 'Instance'])
+        # Sort columns: Instance first, then "# vertices", then alphabetically
+        sorted_columns = ['Instance', '# vertices'] + sorted([c for c in all_columns if c not in ['Instance', '# vertices']])
         
         # Print header
         for col in sorted_columns:
             if col == 'Instance':
                 print(f"{col:<12}", end="")
+            elif col == '# vertices':
+                print(f"{col:>12}", end="")
             else:
                 print(f"{col:>15}", end="")
         print()
@@ -504,6 +551,9 @@ Examples:
             for col in sorted_columns:
                 if col == 'Instance':
                     print(f"{instance_name:<12}", end="")
+                elif col == '# vertices':
+                    value = instance_data.get(col, "N/A")
+                    print(f"{value:>12}", end="")
                 else:
                     value = instance_data.get(col, "N/A")
                     if value != "N/A":

@@ -4,13 +4,16 @@ from typing import Optional
 class AgentLogger:
     """
     Simple logger for each agent that writes to file.
-    Each agent has its own log file: logs/{instance_name}/{agent_id}.log
+    Each agent has its own log file: logs/{instance_name}/{action_name}/{agent_id}.log
     """
     
-    def __init__(self, agent_id: str, instance_name: Optional[str] = None):
+    def __init__(self, agent_id: str, instance_name: Optional[str] = None, action_name: Optional[str] = None):
         self.agent_id = agent_id
         if instance_name:
-            self.log_dir = f"logs/{instance_name}"
+            if action_name:
+                self.log_dir = f"logs/{instance_name}/{action_name.lower()}"
+            else:
+                self.log_dir = f"logs/{instance_name}"
         else:
             self.log_dir = "logs"
         self.log_file = f"{self.log_dir}/{agent_id}.log"
@@ -50,30 +53,39 @@ class AgentLogger:
 # Singleton global - will be initialized by each agent
 _loggers: dict[str, AgentLogger] = {}
 _current_instance: Optional[str] = None
+_current_action: Optional[str] = None
 
-def set_instance_name(instance_name: str):
-    """Define the current instance name for the logs"""
-    global _current_instance, _loggers
+def set_instance_name(instance_name: str, action_name: Optional[str] = None):
+    """Define the current instance name and action name for the logs"""
+    global _current_instance, _current_action, _loggers
     _current_instance = instance_name
-    # Clear existing loggers when changing instance
+    _current_action = action_name
+    # Clear existing loggers when changing instance or action
     _loggers.clear()
 
-def get_logger(agent_id: str, instance_name: Optional[str] = None) -> AgentLogger:
+def get_logger(agent_id: str, instance_name: Optional[str] = None, action_name: Optional[str] = None) -> AgentLogger:
     """
     Gets or creates a logger for the agent.
     
     Args:
         agent_id: Agent ID
         instance_name: Instance name (if None, uses _current_instance)
+        action_name: Action name (if None, uses _current_action)
     """
-    global _current_instance
+    global _current_instance, _current_action
     # Use the provided instance_name or the global
     instance = instance_name if instance_name is not None else _current_instance
+    action = action_name if action_name is not None else _current_action
     
-    # Create a unique key combining instance and agent_id
-    logger_key = f"{instance}_{agent_id}" if instance else agent_id
+    # Create a unique key combining instance, action, and agent_id
+    if instance and action:
+        logger_key = f"{instance}_{action}_{agent_id}"
+    elif instance:
+        logger_key = f"{instance}_{agent_id}"
+    else:
+        logger_key = agent_id
     
     if logger_key not in _loggers:
-        _loggers[logger_key] = AgentLogger(agent_id, instance)
+        _loggers[logger_key] = AgentLogger(agent_id, instance, action)
     return _loggers[logger_key]
 

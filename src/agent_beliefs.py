@@ -58,6 +58,10 @@ class AgentBeliefs:
         self.path_relinking_prob_p_best: float = 0.9
         self.path_relinking_prob_g_best: float = 0.1
 
+        # Evaluation budget tracking
+        self.evaluation_count: int = 0
+        self.evaluation_budget: int = 0  # Will be set by set_evaluation_budget()
+
     # ------------------------------------------------------------------
     # Update after execution of an action (Learning Method)
     # ------------------------------------------------------------------
@@ -191,3 +195,43 @@ class AgentBeliefs:
             else:
                 self.path_relinking_prob_g_best = max(0.0, self.path_relinking_prob_g_best - step_size)
                 self.path_relinking_prob_p_best = min(1.0, 1.0 - self.path_relinking_prob_p_best)
+
+    # ------------------------------------------------------------------
+    # Evaluation Budget Management
+    # ------------------------------------------------------------------
+
+    def set_evaluation_budget(self, budget: int) -> None:
+        """
+        Set the maximum number of evaluations allowed for this agent.
+        
+        Args:
+            budget: Maximum number of objective function evaluations
+        """
+        self.evaluation_budget = budget
+
+    def has_budget_remaining(self) -> bool:
+        """
+        Check if the agent has evaluation budget remaining.
+        
+        Returns:
+            True if evaluation_count < evaluation_budget, False otherwise
+        """
+        return self.evaluation_count < self.evaluation_budget
+
+    def get_evaluation_count(self) -> int:
+        """
+        Get the current evaluation count for this agent.
+        
+        Returns:
+            Current number of evaluations performed
+        """
+        return self.evaluation_count
+
+    def update_evaluation_count(self, count: int) -> None:
+        """
+        Update the evaluation count from the shared counter.
+        
+        Args:
+            count: New evaluation count value
+        """
+        self.evaluation_count = count

@@ -5,6 +5,7 @@ from src.agent_beliefs import AgentBeliefs
 from src.shared import blackboard
 from src.methods.decision_method import decision_method
 from src.utils.logger import get_logger
+from src.utils.evaluation_counter import set_agent_context, clear_agent_context
 
 from src.methods.path_relinking import path_relinking
 from src.utils.evaluator import evaluate_route
@@ -41,171 +42,178 @@ def run_agent_cycle(
 
     Returns the final position of the agent.
     """
+    # Set agent context for evaluation counting
+    set_agent_context(beliefs.agent_id)
 
-    # ------------------------------------------------------------
-    # Initial state
-    # ------------------------------------------------------------
-    current_route = beliefs.current_route
-    current_cost = beliefs.current_cost
+    try:
+        # ------------------------------------------------------------
+        # Initial state
+        # ------------------------------------------------------------
+        current_route = beliefs.current_route
+        current_cost = beliefs.current_cost
 
-    if current_route is None:
-        raise ValueError("[ERROR] Agent without initial solution defined")
+        if current_route is None:
+            raise ValueError("[ERROR] Agent without initial solution defined")
 
-    # ------------------------------------------------------------
-    # 1 - Decision Method
-    # ------------------------------------------------------------
-    logger = get_logger(beliefs.agent_id)
-    action_name = decision_method(beliefs, logger=logger)
-    logger.log_phase("[Decision Method] ")
-    logger.log(f"---> Chosen Metaheuristic: {action_name}")
-    
-    # Validate that the chosen action is available for this agent
-    if action_name not in beliefs.actions:
-        raise ValueError(
-            f"[ERROR] Metaheuristic '{action_name}' is not available for this agent. "
-            f"Available: {list(beliefs.actions.keys())}"
+        # ------------------------------------------------------------
+        # 1 - Decision Method
+        # ------------------------------------------------------------
+        logger = get_logger(beliefs.agent_id)
+        action_name = decision_method(beliefs, logger=logger)
+        logger.log_phase("[Decision Method] ")
+        logger.log(f"---> Chosen Metaheuristic: {action_name}")
+        
+        # Validate that the chosen action is available for this agent
+        if action_name not in beliefs.actions:
+            raise ValueError(
+                f"[ERROR] Metaheuristic '{action_name}' is not available for this agent. "
+                f"Available: {list(beliefs.actions.keys())}"
+            )
+        
+        if action_name not in METAHEURISTICS:
+            raise ValueError(f"[ERROR] Metaheuristic '{action_name}' is not registered in METAHEURISTICS")
+        action_fn = METAHEURISTICS[action_name]
+
+        # ------------------------------------------------------------
+        # 2 - Execution of the Metaheuristic (Action)
+        # ------------------------------------------------------------
+        logger.log_phase(f"[Action - Execution of {action_name} ]")
+        new_route, new_cost = action_fn(current_route, instance)
+        
+        # Validate feasibility of the solution returned by the metaheuristic
+        feasible, validated_cost = evaluate_route(new_route, instance)
+        if not feasible:
+            logger.log(f"[WARNING] Metaheuristic '{action_name}' returned an infeasible solution. Keeping current solution.")
+            new_route, new_cost = current_route, current_cost
+        else:
+            new_cost = validated_cost  # Use validated cost
+
+        # ------------------------------------------------------------
+        # 3 - Learning Method
+        # ------------------------------------------------------------
+        logger.log_phase("[Learning Method - Updating beliefs after action]")
+        beliefs.update_after_action(
+            action_name=action_name,
+            old_cost=current_cost,
+            new_cost=new_cost
         )
-    
-    if action_name not in METAHEURISTICS:
-        raise ValueError(f"[ERROR] Metaheuristic '{action_name}' is not registered in METAHEURISTICS")
-    action_fn = METAHEURISTICS[action_name]
 
-    # ------------------------------------------------------------
-    # 2 - Execution of the Metaheuristic (Action)
-    # ------------------------------------------------------------
-    logger.log_phase(f"[Action - Execution of {action_name} ]")
-    new_route, new_cost = action_fn(current_route, instance)
-    
-    # Validate feasibility of the solution returned by the metaheuristic
-    feasible, validated_cost = evaluate_route(new_route, instance)
-    if not feasible:
-        logger.log(f"[WARNING] Metaheuristic '{action_name}' returned an infeasible solution. Keeping current solution.")
-        new_route, new_cost = current_route, current_cost
-    else:
-        new_cost = validated_cost  # Use validated cost
+        beliefs.update_current_solution(new_route, new_cost)
 
-    # ------------------------------------------------------------
-    # 3 - Learning Method
-    # ------------------------------------------------------------
-    logger.log_phase("[Learning Method - Updating beliefs after action]")
-    beliefs.update_after_action(
-        action_name=action_name,
-        old_cost=current_cost,
-        new_cost=new_cost
-    )
-
-    beliefs.update_current_solution(new_route, new_cost)
-
-    # ------------------------------------------------------------
-    # 4 - Velocity Operator (Path-Relinking)
-    # ------------------------------------------------------------
-    logger.log_phase("[Velocity Operator (Path-Relinking)]")
-    
-    # Get both p_best and g_best
-    p_best_route, p_best_cost = beliefs.p_best_route, beliefs.p_best_cost
-    g_best_route, g_best_cost, _ = blackboard.global_best.get()
-    
-    # Store origin cost before path-relinking (cost after metaheuristic)
-    origin_cost = new_cost
-    
-    # Initialize final solution as the result from metaheuristic
-    final_route, final_cost = new_route, new_cost
-    
-    # Select target based on probabilities
-    target_route = None
-    used_p_best = False
-    
-    if p_best_route is not None and g_best_route is not None:
-        # Both exist: use probability-based selection
-        if random.random() < beliefs.path_relinking_prob_p_best:
+        # ------------------------------------------------------------
+        # 4 - Velocity Operator (Path-Relinking)
+        # ------------------------------------------------------------
+        logger.log_phase("[Velocity Operator (Path-Relinking)]")
+        
+        # Get both p_best and g_best
+        p_best_route, p_best_cost = beliefs.p_best_route, beliefs.p_best_cost
+        g_best_route, g_best_cost, _ = blackboard.global_best.get()
+        
+        # Store origin cost before path-relinking (cost after metaheuristic)
+        origin_cost = new_cost
+        
+        # Initialize final solution as the result from metaheuristic
+        final_route, final_cost = new_route, new_cost
+        
+        # Select target based on probabilities
+        target_route = None
+        used_p_best = False
+        
+        if p_best_route is not None and g_best_route is not None:
+            # Both exist: use probability-based selection
+            if random.random() < beliefs.path_relinking_prob_p_best:
+                target_route = p_best_route
+                used_p_best = True
+                logger.log(f"---> Selected target: p_best (prob_p_best={beliefs.path_relinking_prob_p_best:.3f})")
+            else:
+                target_route = g_best_route
+                used_p_best = False
+                logger.log(f"---> Selected target: g_best (prob_g_best={beliefs.path_relinking_prob_g_best:.3f})")
+        elif p_best_route is not None:
+            # Only p_best exists: use it as fallback
             target_route = p_best_route
             used_p_best = True
-            logger.log(f"---> Selected target: p_best (prob_p_best={beliefs.path_relinking_prob_p_best:.3f})")
-        else:
+            logger.log("---> Selected target: p_best (g_best not available, using fallback)")
+        elif g_best_route is not None:
+            # Only g_best exists: use it as fallback
             target_route = g_best_route
             used_p_best = False
-            logger.log(f"---> Selected target: g_best (prob_g_best={beliefs.path_relinking_prob_g_best:.3f})")
-    elif p_best_route is not None:
-        # Only p_best exists: use it as fallback
-        target_route = p_best_route
-        used_p_best = True
-        logger.log("---> Selected target: p_best (g_best not available, using fallback)")
-    elif g_best_route is not None:
-        # Only g_best exists: use it as fallback
-        target_route = g_best_route
-        used_p_best = False
-        logger.log("---> Selected target: g_best (p_best not available, using fallback)")
-    else:
-        # Neither exists: skip path-relinking
-        logger.log("---> No p_best or g_best found, skipping path-relinking")
-    
-    # Execute path-relinking if target is available
-    if target_route is not None:
-        def opportunistic_intensification(route, instance):
-            """
-            Opportunistic intensification:
-            choose the best metaheuristic according to the current beliefs.
-            Note: Only uses metaheuristics available to this agent (from beliefs.actions).
-            """
-            best_action = beliefs.get_best_action()
-            # Validate that the best action is available for this agent
-            if best_action not in beliefs.actions:
-                raise ValueError(
-                    f"[ERROR] Best action '{best_action}' is not available for this agent. "
-                    f"Available: {list(beliefs.actions.keys())}"
-                )
-            if best_action not in METAHEURISTICS:
-                raise ValueError(f"[ERROR] Metaheuristic '{best_action}' is not registered in METAHEURISTICS")
-            return METAHEURISTICS[best_action](route, instance)
+            logger.log("---> Selected target: g_best (p_best not available, using fallback)")
+        else:
+            # Neither exists: skip path-relinking
+            logger.log("---> No p_best or g_best found, skipping path-relinking")
+        
+        # Execute path-relinking if target is available
+        if target_route is not None:
+            def opportunistic_intensification(route, instance):
+                """
+                Opportunistic intensification:
+                choose the best metaheuristic according to the current beliefs.
+                Note: Only uses metaheuristics available to this agent (from beliefs.actions).
+                """
+                best_action = beliefs.get_best_action()
+                # Validate that the best action is available for this agent
+                if best_action not in beliefs.actions:
+                    raise ValueError(
+                        f"[ERROR] Best action '{best_action}' is not available for this agent. "
+                        f"Available: {list(beliefs.actions.keys())}"
+                    )
+                if best_action not in METAHEURISTICS:
+                    raise ValueError(f"[ERROR] Metaheuristic '{best_action}' is not registered in METAHEURISTICS")
+                return METAHEURISTICS[best_action](route, instance)
 
-        final_route, final_cost = path_relinking(
-            origin=new_route,
-            target=target_route,
-            instance=instance,
-            intensification_method=opportunistic_intensification
+            final_route, final_cost = path_relinking(
+                origin=new_route,
+                target=target_route,
+                instance=instance,
+                intensification_method=opportunistic_intensification
+            )
+            
+            # Check for improvement
+            improved = final_cost < origin_cost
+            
+            # Update probabilities based on result
+            beliefs.update_path_relinking_probabilities(used_p_best, improved)
+            
+            # Log results
+            if improved:
+                logger.log(f"---> Path-relinking IMPROVED: {origin_cost:.2f} -> {final_cost:.2f}")
+            else:
+                logger.log(f"---> Path-relinking NO improvement: {origin_cost:.2f} -> {final_cost:.2f}")
+            
+            logger.log(f"---> Updated probabilities: prob_p_best={beliefs.path_relinking_prob_p_best:.3f}, prob_g_best={beliefs.path_relinking_prob_g_best:.3f}")
+
+        beliefs.update_current_solution(final_route, final_cost)
+
+        # ------------------------------------------------------------
+        # 5 - Update of p_best
+        # ------------------------------------------------------------
+        logger.log_phase("[Update of p_best]")
+        old_p_best_cost = beliefs.p_best_cost
+        p_best_updated = beliefs.try_update_pbest(final_route, final_cost)
+        
+        if p_best_updated:
+            logger.log(f"---> p_best UPDATED: From {old_p_best_cost} to {beliefs.p_best_cost}")
+        
+        # ------------------------------------------------------------
+        # 6 - Update of g_best (Blackboard)
+        # ------------------------------------------------------------
+        logger.log_phase("[Update of g_best (Blackboard)]")
+        # Access global_best from module to ensure we get the injected instance
+        g_route_before, g_cost_before, g_agent_before = blackboard.global_best.get()
+        g_best_updated = blackboard.global_best.try_update(
+            candidate_route=final_route,
+            candidate_cost=final_cost,
+            agent_id=beliefs.agent_id
         )
         
-        # Check for improvement
-        improved = final_cost < origin_cost
-        
-        # Update probabilities based on result
-        beliefs.update_path_relinking_probabilities(used_p_best, improved)
-        
-        # Log results
-        if improved:
-            logger.log(f"---> Path-relinking IMPROVED: {origin_cost:.2f} -> {final_cost:.2f}")
+        if g_best_updated:
+            logger.log(f"---> g_best UPDATED: From {g_cost_before if g_cost_before != float('inf') else 'inf'} to {final_cost} (by agent {beliefs.agent_id})")
         else:
-            logger.log(f"---> Path-relinking NO improvement: {origin_cost:.2f} -> {final_cost:.2f}")
-        
-        logger.log(f"---> Updated probabilities: prob_p_best={beliefs.path_relinking_prob_p_best:.3f}, prob_g_best={beliefs.path_relinking_prob_g_best:.3f}")
+            current_g_cost = g_cost_before if g_cost_before != float('inf') else 'inf'
 
-    beliefs.update_current_solution(final_route, final_cost)
-
-    # ------------------------------------------------------------
-    # 5 - Update of p_best
-    # ------------------------------------------------------------
-    logger.log_phase("[Update of p_best]")
-    old_p_best_cost = beliefs.p_best_cost
-    p_best_updated = beliefs.try_update_pbest(final_route, final_cost)
-    
-    if p_best_updated:
-        logger.log(f"---> p_best UPDATED: From {old_p_best_cost} to {beliefs.p_best_cost}")
-    
-    # ------------------------------------------------------------
-    # 6 - Update of g_best (Blackboard)
-    # ------------------------------------------------------------
-    logger.log_phase("[Update of g_best (Blackboard)]")
-    # Access global_best from module to ensure we get the injected instance
-    g_route_before, g_cost_before, g_agent_before = blackboard.global_best.get()
-    g_best_updated = blackboard.global_best.try_update(
-        candidate_route=final_route,
-        candidate_cost=final_cost,
-        agent_id=beliefs.agent_id
-    )
-    
-    if g_best_updated:
-        logger.log(f"---> g_best UPDATED: From {g_cost_before if g_cost_before != float('inf') else 'inf'} to {final_cost} (by agent {beliefs.agent_id})")
-    else:
-        current_g_cost = g_cost_before if g_cost_before != float('inf') else 'inf'
+    finally:
+        # Clear agent context after cycle completion
+        clear_agent_context()
 
     return final_route, final_cost

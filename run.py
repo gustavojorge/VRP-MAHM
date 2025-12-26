@@ -27,7 +27,7 @@ from src.utils.load_instance import load_instance
 
 # Default configuration
 DEFAULT_NUM_AGENTS = 5
-DEFAULT_MAX_ITERATIONS = 20
+DEFAULT_MAX_EVALUATIONS = 200000  # Default evaluation budget
 DEFAULT_ACTIONS = "mahm"
 
 # Available metaheuristics
@@ -167,25 +167,35 @@ def initialize_agent_with_metaheuristics(agent_id: str, instance_path: str, meta
     }
 
 
-def agent_worker(agent_id: str, max_iterations: int, global_blackboard: GlobalBest, 
+def agent_worker(agent_id: str, max_evaluations: int, num_agents: int, global_blackboard: GlobalBest, 
                  instance_path: str, instance_name: str, metaheuristics: List[str], action_name: str,
-                 agent_times: Dict[str, float]):
+                 agent_times: Dict[str, float], agent_counters: Dict[str, int]):
     """
     Worker function for each agent process.
     
     Args:
         agent_id: Agent ID
-        max_iterations: Maximum number of iterations
+        max_evaluations: Maximum number of objective function evaluations (total across all agents)
+        num_agents: Number of agents in the experiment
         global_blackboard: Shared GlobalBest instance
         instance_path: Path to the instance file
         instance_name: Name of the instance (for logging)
         metaheuristics: List of metaheuristics to use (restricts agent to only these)
         action_name: Name of the action (e.g., 'mahm', 'ils', 'vnd', 'vns') for logging directory
         agent_times: Shared dictionary to store execution times for each agent
+        agent_counters: Shared dictionary to store evaluation counts for each agent
     """
     # Inject the shared blackboard into the module
     import src.shared.blackboard
     src.shared.blackboard.global_best = global_blackboard
+    
+    # Set the agent_counters in compute_route_cost module for this process
+    from src.utils.compute_route_cost import set_agent_counters
+    set_agent_counters(agent_counters)
+    
+    # Set agent context for evaluation counting (must be set before any evaluations)
+    from src.utils.evaluation_counter import set_agent_context
+    set_agent_context(agent_id)
     
     # Set instance name and action name for logging
     set_instance_name(instance_name, action_name)
@@ -217,16 +227,30 @@ def agent_worker(agent_id: str, max_iterations: int, global_blackboard: GlobalBe
     
     beliefs = AGENTS[agent_id]["beliefs"]
     
+    # Calculate per-agent evaluation budget
+    agent_budget = max_evaluations // num_agents
+    beliefs.set_evaluation_budget(agent_budget)
+    
     logger.log("\n--- Initial state ---")
     logger.log(f"Initial Solution/Route: {beliefs.current_route}")
     logger.log(f"Initial Cost: {beliefs.current_cost}")
+    logger.log(f"Evaluation Budget: {agent_budget}")
     logger.log("----------------------\n")
     
-    # Execute the agent cycle
-    for iteration in range(max_iterations):
+    # Sync evaluation count from shared counter (accounts for initialization evaluations)
+    initial_count = agent_counters.get(agent_id, 0)
+    beliefs.update_evaluation_count(initial_count)
+    
+    # Execute the agent cycle with evaluation budget stopping criterion
+    iteration = 0
+    while beliefs.has_budget_remaining():
         logger.log(f"\n==== ITERATION {iteration} ====")
         
         run_cycle(agent_id)
+        
+        # Update evaluation count from shared counter
+        current_count = agent_counters.get(agent_id, 0)
+        beliefs.update_evaluation_count(current_count)
         
         g_route, g_cost, g_agent = global_blackboard.get()
         logger.log_state(
@@ -235,6 +259,12 @@ def agent_worker(agent_id: str, max_iterations: int, global_blackboard: GlobalBe
             g_best_cost=g_cost if g_route is not None else None,
             g_best_agent=g_agent if g_route is not None else None
         )
+        
+        iteration += 1
+        
+        # Check budget again after updating count
+        if not beliefs.has_budget_remaining():
+            break
     
     logger.log("\n===================================")
     logger.log(" EXECUTION FINALIZED ")
@@ -254,13 +284,17 @@ def agent_worker(agent_id: str, max_iterations: int, global_blackboard: GlobalBe
     elapsed_time = end_time - start_time
     logger.log(f"\nRun Time: {elapsed_time:.2f} seconds ({elapsed_time/60:.2f} minutes)")
     
+    # Get final evaluation count and log it
+    final_evaluation_count = agent_counters.get(agent_id, 0)
+    logger.log(f"Total Evaluations: {final_evaluation_count}")
+    
     # Store execution time in shared dictionary
     agent_times[agent_id] = elapsed_time
 
 
 def write_outcome_log(instance_name: str, action_name: str, num_agents: int, 
                       g_best_cost: Optional[float], g_best_agent: Optional[str], 
-                      total_time: float):
+                      total_time: float, agent_counters: Dict[str, int]):
     """
     Write outcome log file with experiment summary.
     
@@ -271,6 +305,7 @@ def write_outcome_log(instance_name: str, action_name: str, num_agents: int,
         g_best_cost: Best cost found (global best)
         g_best_agent: Agent ID that found the global best
         total_time: Total execution time (sum of all agent times)
+        agent_counters: Shared dictionary with evaluation counts for each agent
     """
     log_dir = f"logs/{instance_name}/{action_name.lower()}"
     outcome_file = f"{log_dir}/outcome.log"
@@ -305,11 +340,24 @@ def write_outcome_log(instance_name: str, action_name: str, num_agents: int,
         f.write(f"Total Time: {total_time:.2f} seconds ({total_time/60:.2f} minutes)\n")
         f.write(f"Average Time per Agent: {total_time/num_agents:.2f} seconds\n")
         
+        f.write("\n" + "-" * 80 + "\n")
+        f.write("OBJECTIVE FUNCTION EVALUATIONS\n")
+        f.write("-" * 80 + "\n")
+        # Calculate total evaluations across all agents
+        total_evaluations = sum(agent_counters.values()) if agent_counters else 0
+        f.write(f"Total Evaluations: {total_evaluations}\n")
+        f.write(f"Average Evaluations per Agent: {total_evaluations/num_agents:.2f}\n")
+        f.write("\nPer-Agent Breakdown:\n")
+        for i in range(num_agents):
+            agent_id = f"agent_{i}"
+            agent_eval_count = agent_counters.get(agent_id, 0)
+            f.write(f"  {agent_id}: {agent_eval_count} evaluations\n")
+        
         f.write("\n" + "=" * 80 + "\n")
 
 
 def run_experiment_for_instance(instance_path: str, instance_name: str, metaheuristics: List[str], 
-                                num_agents: int, max_iterations: int) -> Optional[float]:
+                                num_agents: int, max_evaluations: int) -> Optional[float]:
     """
     Run experiment for a specific instance and metaheuristic configuration.
     
@@ -318,7 +366,7 @@ def run_experiment_for_instance(instance_path: str, instance_name: str, metaheur
         instance_name: Name of the instance
         metaheuristics: List of metaheuristics to use
         num_agents: Number of agents to run
-        max_iterations: Maximum number of iterations per agent
+        max_evaluations: Maximum number of objective function evaluations (total across all agents)
     
     Returns:
         g_best_cost: Best cost found, or None if no solution found
@@ -328,6 +376,7 @@ def run_experiment_for_instance(instance_path: str, instance_name: str, metaheur
     manager = mp.Manager()
     global_blackboard = GlobalBest(manager)
     agent_times = manager.dict()  # Shared dictionary for agent execution times
+    agent_counters = manager.dict()  # Shared dictionary for agent evaluation counts
     
     # Determine action name for logging directory
     action_name = get_action_name(metaheuristics)
@@ -338,7 +387,7 @@ def run_experiment_for_instance(instance_path: str, instance_name: str, metaheur
     for i in range(num_agents):
         p = mp.Process(
             target=agent_worker,
-            args=(f"agent_{i}", max_iterations, global_blackboard, instance_path, instance_name, metaheuristics, action_name, agent_times)
+            args=(f"agent_{i}", max_evaluations, num_agents, global_blackboard, instance_path, instance_name, metaheuristics, action_name, agent_times, agent_counters)
         )
         p.start()
         processes.append(p)
@@ -354,7 +403,7 @@ def run_experiment_for_instance(instance_path: str, instance_name: str, metaheur
     total_time = sum(agent_times.values()) if agent_times else 0.0
     
     # Write outcome log file
-    write_outcome_log(instance_name, action_name, num_agents, g_cost, g_agent, total_time)
+    write_outcome_log(instance_name, action_name, num_agents, g_cost, g_agent, total_time, agent_counters)
     
     # Clear AGENTS registry for next experiment
     AGENTS.clear()
@@ -465,8 +514,8 @@ Examples:
   # Run all instances with only ILS
   python run.py --actions ils
   
-  # Run specific instance with VND, 4 agents, 50 iterations
-  python run.py --instance 50 --actions vnd --n-agents 4 --max-iterations 50
+  # Run specific instance with VND, 4 agents, 10000 evaluations
+  python run.py --instance 50 --actions vnd --n-agents 4 --max-evaluations 10000
         """
     )
     
@@ -485,10 +534,10 @@ Examples:
     )
     
     parser.add_argument(
-        "--max-iterations",
+        "--max-evaluations",
         type=int,
-        default=DEFAULT_MAX_ITERATIONS,
-        help=f"Maximum iterations per agent (default: {DEFAULT_MAX_ITERATIONS})"
+        default=DEFAULT_MAX_EVALUATIONS,
+        help=f"Maximum number of objective function evaluations (total across all agents) (default: {DEFAULT_MAX_EVALUATIONS})"
     )
     
     parser.add_argument(
@@ -530,7 +579,7 @@ Examples:
     print(" UNIFIED MULTI-AGENT VRP EXPERIMENT")
     print("=" * 80)
     print(f"Number of agents: {args.n_agents}")
-    print(f"Max iterations per agent: {args.max_iterations}")
+    print(f"Max evaluations (total): {args.max_evaluations}")
     print(f"Actions: {args.actions} -> {metaheuristics}")
     print(f"Instances to process: {len(instance_files)}")
     if args.instance:
@@ -551,7 +600,7 @@ Examples:
             num_nodes = instance.get("num_nodes", "N/A")
             
             g_cost = run_experiment_for_instance(
-                instance_path, instance_name, metaheuristics, args.n_agents, args.max_iterations
+                instance_path, instance_name, metaheuristics, args.n_agents, args.max_evaluations
             )
             
             results[instance_name] = {

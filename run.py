@@ -27,8 +27,9 @@ from src.utils.load_instance import load_instance
 
 # Default configuration
 DEFAULT_NUM_AGENTS = 5
-DEFAULT_MAX_EVALUATIONS = 200000  # Default evaluation budget
+DEFAULT_MAX_EVALUATIONS = 20000  # Default evaluation budget
 DEFAULT_ACTIONS = "mahm"
+NUM_RUNS = 20  # Number of repetitions for each action scenario
 
 # Available metaheuristics
 AVAILABLE_METAHEURISTICS = ["VND", "ILS", "VNS"]
@@ -169,7 +170,7 @@ def initialize_agent_with_metaheuristics(agent_id: str, instance_path: str, meta
 
 def agent_worker(agent_id: str, max_evaluations: int, num_agents: int, global_blackboard: GlobalBest, 
                  instance_path: str, instance_name: str, metaheuristics: List[str], action_name: str,
-                 agent_times: Dict[str, float], agent_counters: Dict[str, int]):
+                 agent_times: Dict[str, float], agent_counters: Dict[str, int], run_number: int):
     """
     Worker function for each agent process.
     
@@ -184,6 +185,7 @@ def agent_worker(agent_id: str, max_evaluations: int, num_agents: int, global_bl
         action_name: Name of the action (e.g., 'mahm', 'ils', 'vnd', 'vns') for logging directory
         agent_times: Shared dictionary to store execution times for each agent
         agent_counters: Shared dictionary to store evaluation counts for each agent
+        run_number: Current run number (1-20)
     """
     # Inject the shared blackboard into the module
     import src.shared.blackboard
@@ -197,11 +199,11 @@ def agent_worker(agent_id: str, max_evaluations: int, num_agents: int, global_bl
     from src.utils.evaluation_counter import set_agent_context
     set_agent_context(agent_id)
     
-    # Set instance name and action name for logging
-    set_instance_name(instance_name, action_name)
+    # Set instance name, action name, and run number for logging
+    set_instance_name(instance_name, action_name, run_number)
     
     # Initialize logger for this agent
-    logger = get_logger(agent_id, instance_name, action_name)
+    logger = get_logger(agent_id, instance_name, action_name, run_number)
     
     # Start timing
     start_time = time.time()
@@ -294,7 +296,7 @@ def agent_worker(agent_id: str, max_evaluations: int, num_agents: int, global_bl
 
 def write_outcome_log(instance_name: str, action_name: str, num_agents: int, 
                       g_best_cost: Optional[float], g_best_agent: Optional[str], 
-                      total_time: float, agent_counters: Dict[str, int]):
+                      total_time: float, agent_counters: Dict[str, int], run_number: int):
     """
     Write outcome log file with experiment summary.
     
@@ -306,8 +308,9 @@ def write_outcome_log(instance_name: str, action_name: str, num_agents: int,
         g_best_agent: Agent ID that found the global best
         total_time: Total execution time (sum of all agent times)
         agent_counters: Shared dictionary with evaluation counts for each agent
+        run_number: Current run number (1-20)
     """
-    log_dir = f"logs/{instance_name}/{action_name.lower()}"
+    log_dir = f"logs/{instance_name}/{action_name.lower()}/{run_number}"
     outcome_file = f"{log_dir}/outcome.log"
     
     # Create directory if it doesn't exist
@@ -319,6 +322,7 @@ def write_outcome_log(instance_name: str, action_name: str, num_agents: int,
         f.write("=" * 80 + "\n\n")
         f.write(f"Instance: {instance_name}\n")
         f.write(f"Action: {action_name.upper()}\n")
+        f.write(f"Run Number: {run_number}\n")
         f.write(f"Number of Agents: {num_agents}\n\n")
         
         f.write("-" * 80 + "\n")
@@ -356,8 +360,145 @@ def write_outcome_log(instance_name: str, action_name: str, num_agents: int,
         f.write("\n" + "=" * 80 + "\n")
 
 
+def parse_outcome_log(outcome_file: str) -> Dict[str, Any]:
+    """
+    Parse an outcome.log file to extract key information.
+    
+    Args:
+        outcome_file: Path to outcome.log file
+    
+    Returns:
+        Dictionary with parsed information (g_best_cost, total_time, total_evaluations)
+    """
+    result = {
+        "g_best_cost": None,
+        "total_time": None,
+        "total_evaluations": None
+    }
+    
+    if not os.path.exists(outcome_file):
+        return result
+    
+    with open(outcome_file, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    
+    for i, line in enumerate(lines):
+        if "Best Cost:" in line:
+            try:
+                # Extract cost value
+                parts = line.split("Best Cost:")
+                if len(parts) > 1:
+                    cost_str = parts[1].strip()
+                    if cost_str != "N/A (No solution found)":
+                        result["g_best_cost"] = float(cost_str)
+            except (ValueError, IndexError):
+                pass
+        elif "Total Time:" in line:
+            try:
+                # Extract time value (format: "Total Time: 225.45 seconds")
+                parts = line.split("Total Time:")
+                if len(parts) > 1:
+                    time_str = parts[1].strip().split()[0]  # Get number before "seconds"
+                    result["total_time"] = float(time_str)
+            except (ValueError, IndexError):
+                pass
+        elif "Total Evaluations:" in line:
+            try:
+                # Extract evaluation count
+                parts = line.split("Total Evaluations:")
+                if len(parts) > 1:
+                    result["total_evaluations"] = int(parts[1].strip())
+            except (ValueError, IndexError):
+                pass
+    
+    return result
+
+
+def write_summary_log(instance_name: str, action_name: str, num_agents: int, num_runs: int):
+    """
+    Write summary log file consolidating results from all runs.
+    
+    Args:
+        instance_name: Name of the instance
+        action_name: Name of the action (e.g., 'mahm', 'ils', 'vnd', 'vns')
+        num_agents: Number of agents used
+        num_runs: Number of runs (should be 20)
+    """
+    log_dir = f"logs/{instance_name}/{action_name.lower()}"
+    summary_file = f"{log_dir}/summary.log"
+    
+    # Create directory if it doesn't exist
+    os.makedirs(log_dir, exist_ok=True)
+    
+    # Collect data from all runs
+    g_best_costs = []
+    total_times = []
+    total_evaluations_list = []
+    
+    for run_num in range(1, num_runs + 1):
+        outcome_file = f"{log_dir}/{run_num}/outcome.log"
+        parsed = parse_outcome_log(outcome_file)
+        
+        if parsed["g_best_cost"] is not None:
+            g_best_costs.append(parsed["g_best_cost"])
+        if parsed["total_time"] is not None:
+            total_times.append(parsed["total_time"])
+        if parsed["total_evaluations"] is not None:
+            total_evaluations_list.append(parsed["total_evaluations"])
+    
+    # Calculate statistics
+    avg_g_best_cost = sum(g_best_costs) / len(g_best_costs) if g_best_costs else None
+    total_execution_time = sum(total_times) if total_times else 0.0
+    avg_time_per_run = total_execution_time / len(total_times) if total_times else 0.0
+    total_evaluations_all_runs = sum(total_evaluations_list) if total_evaluations_list else 0
+    
+    with open(summary_file, 'w', encoding='utf-8') as f:
+        f.write("=" * 80 + "\n")
+        f.write(" EXPERIMENT SUMMARY (20 RUNS)\n")
+        f.write("=" * 80 + "\n\n")
+        f.write(f"Instance: {instance_name}\n")
+        f.write(f"Action: {action_name.upper()}\n")
+        f.write(f"Number of Agents: {num_agents}\n")
+        f.write(f"Number of Runs: {num_runs}\n\n")
+        
+        f.write("-" * 80 + "\n")
+        f.write("GLOBAL BEST SOLUTION (AVERAGE)\n")
+        f.write("-" * 80 + "\n")
+        if avg_g_best_cost is not None:
+            f.write(f"Average Best Cost: {avg_g_best_cost:.2f}\n")
+            f.write(f"Runs with valid solutions: {len(g_best_costs)}/{num_runs}\n")
+        else:
+            f.write("Average Best Cost: N/A (No valid solutions found)\n")
+        
+        f.write("\n" + "-" * 80 + "\n")
+        f.write("EXECUTION TIME\n")
+        f.write("-" * 80 + "\n")
+        f.write(f"Total Time (all runs): {total_execution_time:.2f} seconds ({total_execution_time/60:.2f} minutes)\n")
+        f.write(f"Average Time per Run: {avg_time_per_run:.2f} seconds ({avg_time_per_run/60:.2f} minutes)\n")
+        
+        f.write("\n" + "-" * 80 + "\n")
+        f.write("OBJECTIVE FUNCTION EVALUATIONS\n")
+        f.write("-" * 80 + "\n")
+        f.write(f"Total Evaluations (all runs): {total_evaluations_all_runs}\n")
+        if total_evaluations_list:
+            avg_evaluations_per_run = total_evaluations_all_runs / len(total_evaluations_list)
+            f.write(f"Average Evaluations per Run: {avg_evaluations_per_run:.2f}\n")
+        
+        f.write("\n" + "-" * 80 + "\n")
+        f.write("PER-RUN BREAKDOWN\n")
+        f.write("-" * 80 + "\n")
+        for run_num in range(1, num_runs + 1):
+            outcome_file = f"{log_dir}/{run_num}/outcome.log"
+            parsed = parse_outcome_log(outcome_file)
+            g_cost = parsed["g_best_cost"] if parsed["g_best_cost"] is not None else "N/A"
+            run_time = parsed["total_time"] if parsed["total_time"] is not None else "N/A"
+            f.write(f"Run {run_num:2d}: g_best={g_cost:>10} | time={run_time:>10} seconds\n")
+        
+        f.write("\n" + "=" * 80 + "\n")
+
+
 def run_experiment_for_instance(instance_path: str, instance_name: str, metaheuristics: List[str], 
-                                num_agents: int, max_evaluations: int) -> Optional[float]:
+                                num_agents: int, max_evaluations: int, run_number: int) -> Optional[float]:
     """
     Run experiment for a specific instance and metaheuristic configuration.
     
@@ -367,6 +508,7 @@ def run_experiment_for_instance(instance_path: str, instance_name: str, metaheur
         metaheuristics: List of metaheuristics to use
         num_agents: Number of agents to run
         max_evaluations: Maximum number of objective function evaluations (total across all agents)
+        run_number: Current run number (1-20)
     
     Returns:
         g_best_cost: Best cost found, or None if no solution found
@@ -387,7 +529,7 @@ def run_experiment_for_instance(instance_path: str, instance_name: str, metaheur
     for i in range(num_agents):
         p = mp.Process(
             target=agent_worker,
-            args=(f"agent_{i}", max_evaluations, num_agents, global_blackboard, instance_path, instance_name, metaheuristics, action_name, agent_times, agent_counters)
+            args=(f"agent_{i}", max_evaluations, num_agents, global_blackboard, instance_path, instance_name, metaheuristics, action_name, agent_times, agent_counters, run_number)
         )
         p.start()
         processes.append(p)
@@ -403,7 +545,7 @@ def run_experiment_for_instance(instance_path: str, instance_name: str, metaheur
     total_time = sum(agent_times.values()) if agent_times else 0.0
     
     # Write outcome log file
-    write_outcome_log(instance_name, action_name, num_agents, g_cost, g_agent, total_time, agent_counters)
+    write_outcome_log(instance_name, action_name, num_agents, g_cost, g_agent, total_time, agent_counters, run_number)
     
     # Clear AGENTS registry for next experiment
     AGENTS.clear()
@@ -543,18 +685,11 @@ Examples:
     parser.add_argument(
         "--actions",
         type=str,
-        default=DEFAULT_ACTIONS,
-        help="Metaheuristic selection: 'mahm', 'ils', 'vnd', or 'vns' (default: 'mahm')"
+        default=None,
+        help="Metaheuristic selection: 'mahm', 'ils', 'vnd', or 'vns'. If not provided, runs all 4 actions with 20 repetitions each."
     )
     
     args = parser.parse_args()
-    
-    # Validate and normalize actions parameter
-    try:
-        metaheuristics = get_metaheuristics_list(args.actions)
-    except ValueError as e:
-        print(f"Error: {e}")
-        return
     
     # Get instance files
     try:
@@ -567,74 +702,115 @@ Examples:
         print("No instance files found in 'instances/'!")
         return
     
-    # Determine column name for CSV
-    if len(metaheuristics) == len(AVAILABLE_METAHEURISTICS):
-        column_name = "MAHM"
-    elif len(metaheuristics) == 1:
-        column_name = metaheuristics[0]
+    # Determine which actions to run
+    if args.actions:
+        # Single action mode (backward compatibility)
+        try:
+            metaheuristics = get_metaheuristics_list(args.actions)
+            actions_to_run = [args.actions]
+        except ValueError as e:
+            print(f"Error: {e}")
+            return
     else:
-        column_name = "MAHM"
+        # Run all 4 actions with 20 repetitions each
+        actions_to_run = ["mahm", "ils", "vnd", "vns"]
     
     print("=" * 80)
     print(" UNIFIED MULTI-AGENT VRP EXPERIMENT")
     print("=" * 80)
     print(f"Number of agents: {args.n_agents}")
     print(f"Max evaluations (total): {args.max_evaluations}")
-    print(f"Actions: {args.actions} -> {metaheuristics}")
+    print(f"Actions to run: {actions_to_run}")
+    print(f"Runs per action: {NUM_RUNS}")
     print(f"Instances to process: {len(instance_files)}")
     if args.instance:
         print(f"Specific instance: {args.instance}")
     print("=" * 80)
     print()
     
-    # Results dictionary: {instance_name: {column_name: cost, "# vertices": num_nodes}}
+    # Results dictionary: {instance_name: {action_name: average_cost, "# vertices": num_nodes}}
     results = {}
     
-    # Run experiments
-    for idx, (instance_path, instance_name) in enumerate(instance_files, 1):
-        print(f"[{idx}/{len(instance_files)}] Executando instância {instance_name}...", end=" ", flush=True)
+    # Run experiments for each action
+    for action_name in actions_to_run:
+        print("\n" + "=" * 80)
+        print(f" RUNNING ACTION: {action_name.upper()}")
+        print("=" * 80)
         
+        # Get metaheuristics for this action
         try:
-            # Load instance to get num_nodes
-            instance = load_instance(instance_path)
-            num_nodes = instance.get("num_nodes", "N/A")
+            metaheuristics = get_metaheuristics_list(action_name)
+        except ValueError as e:
+            print(f"Error: {e}")
+            continue
+        
+        # Determine column name for CSV
+        if len(metaheuristics) == len(AVAILABLE_METAHEURISTICS):
+            column_name = "MAHM"
+        elif len(metaheuristics) == 1:
+            column_name = metaheuristics[0]
+        else:
+            column_name = "MAHM"
+        
+        # Run experiments for each instance
+        for idx, (instance_path, instance_name) in enumerate(instance_files, 1):
+            print(f"\n[{idx}/{len(instance_files)}] Instance {instance_name} - Action {action_name.upper()}")
             
-            g_cost = run_experiment_for_instance(
-                instance_path, instance_name, metaheuristics, args.n_agents, args.max_evaluations
-            )
+            # Initialize results for this instance if not exists
+            if instance_name not in results:
+                try:
+                    instance = load_instance(instance_path)
+                    num_nodes = instance.get("num_nodes", "N/A")
+                    results[instance_name] = {
+                        "# vertices": num_nodes
+                    }
+                except:
+                    results[instance_name] = {
+                        "# vertices": "N/A"
+                    }
             
-            results[instance_name] = {
-                column_name: g_cost,
-                "# vertices": num_nodes
-            }
+            # Run 20 times for this instance/action combination
+            g_best_costs = []
             
-            if g_cost is not None:
-                print(f"✓ Custo: {g_cost}")
-            else:
-                print(f"❌ Nenhuma solução encontrada")
+            for run_num in range(1, NUM_RUNS + 1):
+                print(f"  Run {run_num}/{NUM_RUNS}...", end=" ", flush=True)
                 
-        except Exception as e:
-            print(f"❌ Erro: {e}")
-            # Try to get num_nodes even if experiment failed
-            try:
-                instance = load_instance(instance_path)
-                num_nodes = instance.get("num_nodes", "N/A")
-            except:
-                num_nodes = "N/A"
-            results[instance_name] = {
-                column_name: None,
-                "# vertices": num_nodes
-            }
-            import traceback
-            traceback.print_exc()
+                try:
+                    g_cost = run_experiment_for_instance(
+                        instance_path, instance_name, metaheuristics, args.n_agents, args.max_evaluations, run_num
+                    )
+                    
+                    if g_cost is not None:
+                        g_best_costs.append(g_cost)
+                        print(f"✓ Cost: {g_cost:.2f}")
+                    else:
+                        print(f"❌ No solution")
+                        
+                except Exception as e:
+                    print(f"❌ Error: {e}")
+                    import traceback
+                    traceback.print_exc()
+            
+            # Calculate average cost for this instance/action
+            if g_best_costs:
+                avg_cost = sum(g_best_costs) / len(g_best_costs)
+                results[instance_name][column_name] = avg_cost
+                print(f"  Average cost: {avg_cost:.2f} (from {len(g_best_costs)}/{NUM_RUNS} successful runs)")
+            else:
+                results[instance_name][column_name] = None
+                print(f"  Average cost: N/A (no successful runs)")
+            
+            # Write summary log after all 20 runs for this instance/action
+            write_summary_log(instance_name, action_name, args.n_agents, NUM_RUNS)
     
     # Write adaptive CSV
     print("\n" + "=" * 80)
-    print(" GERANDO TABELA DE RESULTADOS")
+    print(" GENERATING RESULTS TABLE")
     print("=" * 80)
     
     csv_filename = "results.csv"
-    write_adaptive_csv(results, csv_filename, metaheuristics)
+    # Collect all executed metaheuristics (all available for CSV column determination)
+    write_adaptive_csv(results, csv_filename, AVAILABLE_METAHEURISTICS)
     
     print(f"\n✓ Tabela salva em: {csv_filename}")
     

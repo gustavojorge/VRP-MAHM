@@ -296,7 +296,8 @@ def agent_worker(agent_id: str, max_evaluations: int, num_agents: int, global_bl
 
 def write_outcome_log(instance_name: str, action_name: str, num_agents: int, 
                       g_best_cost: Optional[float], g_best_agent: Optional[str], 
-                      total_time: float, agent_counters: Dict[str, int], run_number: int):
+                      average_time_per_agent: float, max_agent_time: float,
+                      agent_counters: Dict[str, int], run_number: int):
     """
     Write outcome log file with experiment summary.
     
@@ -306,7 +307,8 @@ def write_outcome_log(instance_name: str, action_name: str, num_agents: int,
         num_agents: Number of agents used
         g_best_cost: Best cost found (global best)
         g_best_agent: Agent ID that found the global best
-        total_time: Total execution time (sum of all agent times)
+        average_time_per_agent: Average execution time per agent (this is the run time since agents run in parallel)
+        max_agent_time: Maximum execution time among all agents
         agent_counters: Shared dictionary with evaluation counts for each agent
         run_number: Current run number (1-20)
     """
@@ -341,8 +343,8 @@ def write_outcome_log(instance_name: str, action_name: str, num_agents: int,
         f.write("\n" + "-" * 80 + "\n")
         f.write("EXECUTION TIME\n")
         f.write("-" * 80 + "\n")
-        f.write(f"Total Time: {total_time:.2f} seconds ({total_time/60:.2f} minutes)\n")
-        f.write(f"Average Time per Agent: {total_time/num_agents:.2f} seconds\n")
+        f.write(f"Average Time per Agent: {average_time_per_agent:.2f} seconds ({average_time_per_agent/60:.2f} minutes)\n")
+        f.write(f"Maximum Agent Time: {max_agent_time:.2f} seconds ({max_agent_time/60:.2f} minutes)\n")
         
         f.write("\n" + "-" * 80 + "\n")
         f.write("OBJECTIVE FUNCTION EVALUATIONS\n")
@@ -368,11 +370,11 @@ def parse_outcome_log(outcome_file: str) -> Dict[str, Any]:
         outcome_file: Path to outcome.log file
     
     Returns:
-        Dictionary with parsed information (g_best_cost, total_time, total_evaluations)
+        Dictionary with parsed information (g_best_cost, average_time_per_agent, total_evaluations)
     """
     result = {
         "g_best_cost": None,
-        "total_time": None,
+        "average_time_per_agent": None,
         "total_evaluations": None
     }
     
@@ -393,13 +395,13 @@ def parse_outcome_log(outcome_file: str) -> Dict[str, Any]:
                         result["g_best_cost"] = float(cost_str)
             except (ValueError, IndexError):
                 pass
-        elif "Total Time:" in line:
+        elif "Average Time per Agent:" in line:
             try:
-                # Extract time value (format: "Total Time: 225.45 seconds")
-                parts = line.split("Total Time:")
+                # Extract time value (format: "Average Time per Agent: 225.45 seconds")
+                parts = line.split("Average Time per Agent:")
                 if len(parts) > 1:
                     time_str = parts[1].strip().split()[0]  # Get number before "seconds"
-                    result["total_time"] = float(time_str)
+                    result["average_time_per_agent"] = float(time_str)
             except (ValueError, IndexError):
                 pass
         elif "Total Evaluations:" in line:
@@ -432,7 +434,7 @@ def write_summary_log(instance_name: str, action_name: str, num_agents: int, num
     
     # Collect data from all runs
     g_best_costs = []
-    total_times = []
+    average_times_per_agent = []  # List of "Average Time per Agent" from each run
     total_evaluations_list = []
     
     for run_num in range(1, num_runs + 1):
@@ -441,15 +443,16 @@ def write_summary_log(instance_name: str, action_name: str, num_agents: int, num
         
         if parsed["g_best_cost"] is not None:
             g_best_costs.append(parsed["g_best_cost"])
-        if parsed["total_time"] is not None:
-            total_times.append(parsed["total_time"])
+        if parsed["average_time_per_agent"] is not None:
+            average_times_per_agent.append(parsed["average_time_per_agent"])
         if parsed["total_evaluations"] is not None:
             total_evaluations_list.append(parsed["total_evaluations"])
     
     # Calculate statistics
     avg_g_best_cost = sum(g_best_costs) / len(g_best_costs) if g_best_costs else None
-    total_execution_time = sum(total_times) if total_times else 0.0
-    avg_time_per_run = total_execution_time / len(total_times) if total_times else 0.0
+    # Total time is the sum of "Average Time per Agent" from each run
+    total_execution_time = sum(average_times_per_agent) if average_times_per_agent else 0.0
+    avg_time_per_run = total_execution_time / len(average_times_per_agent) if average_times_per_agent else 0.0
     total_evaluations_all_runs = sum(total_evaluations_list) if total_evaluations_list else 0
     
     with open(summary_file, 'w', encoding='utf-8') as f:
@@ -473,6 +476,7 @@ def write_summary_log(instance_name: str, action_name: str, num_agents: int, num
         f.write("\n" + "-" * 80 + "\n")
         f.write("EXECUTION TIME\n")
         f.write("-" * 80 + "\n")
+        # Total time is the sum of "Average Time per Agent" from each run's outcome.log
         f.write(f"Total Time (all runs): {total_execution_time:.2f} seconds ({total_execution_time/60:.2f} minutes)\n")
         f.write(f"Average Time per Run: {avg_time_per_run:.2f} seconds ({avg_time_per_run/60:.2f} minutes)\n")
         
@@ -491,8 +495,12 @@ def write_summary_log(instance_name: str, action_name: str, num_agents: int, num
             outcome_file = f"{log_dir}/{run_num}/outcome.log"
             parsed = parse_outcome_log(outcome_file)
             g_cost = parsed["g_best_cost"] if parsed["g_best_cost"] is not None else "N/A"
-            run_time = parsed["total_time"] if parsed["total_time"] is not None else "N/A"
-            f.write(f"Run {run_num:2d}: g_best={g_cost:>10} | time={run_time:>10} seconds\n")
+            # Use average_time_per_agent as the run time (since agents run in parallel)
+            run_time = parsed["average_time_per_agent"] if parsed["average_time_per_agent"] is not None else "N/A"
+            if isinstance(run_time, float):
+                f.write(f"Run {run_num:2d}: g_best={g_cost:>10} | time={run_time:>10.2f} seconds\n")
+            else:
+                f.write(f"Run {run_num:2d}: g_best={g_cost:>10} | time={run_time:>10} seconds\n")
         
         f.write("\n" + "=" * 80 + "\n")
 
@@ -541,11 +549,19 @@ def run_experiment_for_instance(instance_path: str, instance_name: str, metaheur
     # Get final result
     g_route, g_cost, g_agent = global_blackboard.get()
     
-    # Calculate total execution time (sum of all agent times)
-    total_time = sum(agent_times.values()) if agent_times else 0.0
+    # Calculate execution time metrics
+    # Since agents run in parallel, the run time is the average time per agent
+    # (or the max time, but we'll use average as the run time per user's request)
+    if agent_times and len(agent_times) > 0:
+        average_time_per_agent = sum(agent_times.values()) / len(agent_times)
+        max_agent_time = max(agent_times.values())
+    else:
+        average_time_per_agent = 0.0
+        max_agent_time = 0.0
     
     # Write outcome log file
-    write_outcome_log(instance_name, action_name, num_agents, g_cost, g_agent, total_time, agent_counters, run_number)
+    write_outcome_log(instance_name, action_name, num_agents, g_cost, g_agent, 
+                     average_time_per_agent, max_agent_time, agent_counters, run_number)
     
     # Clear AGENTS registry for next experiment
     AGENTS.clear()

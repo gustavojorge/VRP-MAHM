@@ -194,6 +194,9 @@ def run_agent_cycle(
         
         if p_best_updated:
             logger.log(f"---> p_best UPDATED: From {old_p_best_cost} to {beliefs.p_best_cost}")
+            # Update shared p_best structure for checkpoint
+            from src.utils.checkpoint import update_agent_p_best
+            update_agent_p_best(beliefs.agent_id, beliefs.p_best_cost, beliefs.p_best_route)
         
         # ------------------------------------------------------------
         # 6 - Update of g_best (Blackboard)

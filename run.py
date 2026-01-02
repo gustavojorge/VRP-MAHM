@@ -27,7 +27,7 @@ from src.utils.load_instance import load_instance
 
 # Default configuration
 DEFAULT_NUM_AGENTS = 5
-DEFAULT_MAX_EVALUATIONS = 20000  # Default evaluation budget
+DEFAULT_MAX_EVALUATIONS = 1000000  # Default evaluation budget
 DEFAULT_ACTIONS = "mahm"
 NUM_RUNS = 20  # Number of repetitions for each action scenario
 
@@ -170,7 +170,7 @@ def initialize_agent_with_metaheuristics(agent_id: str, instance_path: str, meta
 
 def agent_worker(agent_id: str, max_evaluations: int, num_agents: int, global_blackboard: GlobalBest, 
                  instance_path: str, instance_name: str, metaheuristics: List[str], action_name: str,
-                 agent_times: Dict[str, float], agent_counters: Dict[str, int], run_number: int):
+                 agent_times: Dict[str, float], agent_counters: Dict[str, int], agent_p_bests: Dict[str, Dict[str, Any]], checkpoint_lock: Any, run_number: int):
     """
     Worker function for each agent process.
     
@@ -185,6 +185,8 @@ def agent_worker(agent_id: str, max_evaluations: int, num_agents: int, global_bl
         action_name: Name of the action (e.g., 'mahm', 'ils', 'vnd', 'vns') for logging directory
         agent_times: Shared dictionary to store execution times for each agent
         agent_counters: Shared dictionary to store evaluation counts for each agent
+        agent_p_bests: Shared dictionary to store p_best values for each agent
+        checkpoint_lock: Lock for thread-safe checkpoint writing
         run_number: Current run number (1-20)
     """
     # Inject the shared blackboard into the module
@@ -194,6 +196,10 @@ def agent_worker(agent_id: str, max_evaluations: int, num_agents: int, global_bl
     # Set the agent_counters in compute_route_cost module for this process
     from src.utils.compute_route_cost import set_agent_counters
     set_agent_counters(agent_counters)
+    
+    # Configure checkpoint module with shared structures
+    from src.utils.checkpoint import set_shared_structures
+    set_shared_structures(agent_p_bests, checkpoint_lock)
     
     # Set agent context for evaluation counting (must be set before any evaluations)
     from src.utils.evaluation_counter import set_agent_context
@@ -243,6 +249,10 @@ def agent_worker(agent_id: str, max_evaluations: int, num_agents: int, global_bl
     initial_count = agent_counters.get(agent_id, 0)
     beliefs.update_evaluation_count(initial_count)
     
+    # Initialize agent's p_best in shared structure
+    from src.utils.checkpoint import update_agent_p_best
+    update_agent_p_best(agent_id, beliefs.p_best_cost, beliefs.p_best_route)
+    
     # Execute the agent cycle with evaluation budget stopping criterion
     iteration = 0
     while beliefs.has_budget_remaining():
@@ -253,6 +263,20 @@ def agent_worker(agent_id: str, max_evaluations: int, num_agents: int, global_bl
         # Update evaluation count from shared counter
         current_count = agent_counters.get(agent_id, 0)
         beliefs.update_evaluation_count(current_count)
+        
+        # Calculate total evaluations across all agents
+        total_evaluations = sum(agent_counters.values()) if agent_counters else 0
+        
+        # Write checkpoint if needed (every 100,000 evaluations)
+        from src.utils.checkpoint import write_checkpoint
+        write_checkpoint(
+            instance_name=instance_name,
+            action_name=action_name,
+            run_number=run_number,
+            total_evaluations=total_evaluations,
+            global_blackboard=global_blackboard,
+            num_agents=num_agents
+        )
         
         g_route, g_cost, g_agent = global_blackboard.get()
         logger.log_state(
@@ -469,7 +493,6 @@ def write_summary_log(instance_name: str, action_name: str, num_agents: int, num
         f.write("-" * 80 + "\n")
         if avg_g_best_cost is not None:
             f.write(f"Average Best Cost: {avg_g_best_cost:.2f}\n")
-            f.write(f"Runs with valid solutions: {len(g_best_costs)}/{num_runs}\n")
         else:
             f.write("Average Best Cost: N/A (No valid solutions found)\n")
         
@@ -527,6 +550,8 @@ def run_experiment_for_instance(instance_path: str, instance_name: str, metaheur
     global_blackboard = GlobalBest(manager)
     agent_times = manager.dict()  # Shared dictionary for agent execution times
     agent_counters = manager.dict()  # Shared dictionary for agent evaluation counts
+    agent_p_bests = manager.dict()  # Shared dictionary for agent p_best values
+    checkpoint_lock = manager.Lock()  # Lock for thread-safe checkpoint writing
     
     # Determine action name for logging directory
     action_name = get_action_name(metaheuristics)
@@ -537,7 +562,7 @@ def run_experiment_for_instance(instance_path: str, instance_name: str, metaheur
     for i in range(num_agents):
         p = mp.Process(
             target=agent_worker,
-            args=(f"agent_{i}", max_evaluations, num_agents, global_blackboard, instance_path, instance_name, metaheuristics, action_name, agent_times, agent_counters, run_number)
+            args=(f"agent_{i}", max_evaluations, num_agents, global_blackboard, instance_path, instance_name, metaheuristics, action_name, agent_times, agent_counters, agent_p_bests, checkpoint_lock, run_number)
         )
         p.start()
         processes.append(p)

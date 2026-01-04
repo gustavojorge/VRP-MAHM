@@ -1,0 +1,101 @@
+{
+  "instance_id": "SUNT_VRP_LINE_1230_001",
+  "description": "VRP instance for Line 1230 with real fleet data from SUNT",
+  "num_nodes": 5,
+  "time_unit": "minutes",
+  "vehicle_fleet": {
+    "num_vehicles": 5,
+    "vehicle_ids": [
+      "20432",
+      "20376",
+      "21204",
+      "20400",
+      "20288"
+    ],
+    "max_capacity": 50
+  },
+  "line_info": {
+    "line_short_name": "1230",
+    "real_vehicles_count": 37,
+    "date": "2024-03-01"
+  },
+  "nodes": [
+    {
+      "id": 0,
+      "type": "depot",
+      "latitude": -12.9711,
+      "longitude": -38.5108,
+      "n_boardings": 0,
+      "n_alighting": 0
+    },
+    {
+      "id": 1,
+      "type": "stop",
+      "latitude": -12.971806915750092,
+      "longitude": -38.5017493700356,
+      "n_boardings": 5,
+      "n_alighting": 3
+    },
+    {
+      "id": 2,
+      "type": "stop",
+      "latitude": -12.976670317853964,
+      "longitude": -38.507388024502696,
+      "n_boardings": 5,
+      "n_alighting": 3
+    },
+    {
+      "id": 3,
+      "type": "stop",
+      "latitude": -12.96512599979558,
+      "longitude": -38.50480706304459,
+      "n_boardings": 5,
+      "n_alighting": 3
+    },
+    {
+      "id": 4,
+      "type": "stop",
+      "latitude": -12.967421369750664,
+      "longitude": -38.51652979937939,
+      "n_boardings": 5,
+      "n_alighting": 3
+    }
+  ],
+  "trip_time_matrix": [
+    [
+      0.0,
+      3.0,
+      2.0,
+      3.0,
+      2.0
+    ],
+    [
+      2.0,
+      0.0,
+      2.0,
+      2.0,
+      5.0
+    ],
+    [
+      2.0,
+      2.0,
+      0.0,
+      4.0,
+      4.0
+    ],
+    [
+      2.0,
+      2.0,
+      4.0,
+      0.0,
+      4.0
+    ],
+    [
+      2.0,
+      5.0,
+      4.0,
+      4.0,
+      0.0
+    ]
+  ]
+}

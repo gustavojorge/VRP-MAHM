@@ -74,14 +74,9 @@ def write_checkpoint(
     
     # Check if we should write a checkpoint (multiple of 100,000)
     checkpoint_interval = 100000
+    
+    # Only proceed if total_evaluations is at least 100,000
     if total_evaluations < checkpoint_interval:
-        return
-    
-    # Calculate which checkpoint we should be at (the largest multiple of 100,000 <= total_evaluations)
-    current_checkpoint = (total_evaluations // checkpoint_interval) * checkpoint_interval
-    
-    # Only proceed if we've crossed a checkpoint boundary
-    if current_checkpoint < checkpoint_interval:
         return
     
     # Prepare CSV file path
@@ -93,17 +88,44 @@ def write_checkpoint(
         # Check if file exists to determine if we need to write header
         file_exists = os.path.exists(checkpoint_file)
         
-        # Check if this checkpoint was already written by reading the CSV file
+        # Find the last written checkpoint
+        last_written_checkpoint = 0
         if file_exists:
             try:
                 with open(checkpoint_file, "r", newline="", encoding="utf-8") as csvfile:
                     reader = csv.DictReader(csvfile)
                     for row in reader:
-                        if int(row.get("checkpoint_evaluations", 0)) == current_checkpoint:
-                            return  # Checkpoint already exists
+                        checkpoint_val = int(row.get("checkpoint_evaluations", 0))
+                        last_written_checkpoint = max(last_written_checkpoint, checkpoint_val)
+            except (ValueError, KeyError, IOError):
+                # If file is corrupted or can't be read, start from 0
+                last_written_checkpoint = 0
+        
+        # Calculate the next checkpoint that should be written
+        # It should be the next multiple of 100,000 after the last written checkpoint
+        next_checkpoint = ((last_written_checkpoint // checkpoint_interval) + 1) * checkpoint_interval
+        
+        # Only write if we've reached or exceeded the next checkpoint
+        if total_evaluations < next_checkpoint:
+            return
+        
+        # Check if this checkpoint was already written (safety check)
+        # This can happen if multiple processes check simultaneously
+        if file_exists:
+            try:
+                with open(checkpoint_file, "r", newline="", encoding="utf-8") as csvfile:
+                    reader = csv.DictReader(csvfile)
+                    for row in reader:
+                        checkpoint_val = int(row.get("checkpoint_evaluations", 0))
+                        if checkpoint_val == next_checkpoint:
+                            # This checkpoint was already written by another process
+                            return
             except (ValueError, KeyError, IOError):
                 # If file is corrupted or can't be read, proceed to write
                 pass
+        
+        # Use next_checkpoint as the current_checkpoint to write
+        current_checkpoint = next_checkpoint
         
         # Get g_best from blackboard
         g_route, g_cost, g_agent = global_blackboard.get()

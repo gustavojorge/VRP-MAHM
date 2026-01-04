@@ -1,0 +1,61 @@
+{
+    "instance_id": "SUNT_VRP_MOCK_001",
+    "description": "Simulated VRP instance for Minimum Total Travel Time",
+    "num_nodes": 5,
+    "time_unit": "minutes",
+    "vehicle_fleet": {
+      "num_vehicles": 1,
+      "max_capacity": 50 
+    },
+    "nodes": [
+      {
+        "id": 0,
+        "type": "depot",
+        "latitude": -12.9711,
+        "longitude": -38.5108,
+        "n_boardings": 0,
+        "n_alighting": 0 
+      },
+      {
+        "id": 1,
+        "type": "stop",
+        "latitude": -12.9850,
+        "longitude": -38.5005,
+        "n_boardings": 15,
+        "n_alighting": 5 
+      },
+      {
+        "id": 2,
+        "type": "stop",
+        "latitude": -12.9922,
+        "longitude": -38.5150,
+        "n_boardings": 20,
+        "n_alighting": 10 
+      },
+      {
+        "id": 3,
+        "type": "stop",
+        "latitude": -12.9755,
+        "longitude": -38.5288,
+        "n_boardings": 5,
+        "n_alighting": 15 
+      },
+      {
+        "id": 4,
+        "type": "stop",
+        "latitude": -12.9601,
+        "longitude": -38.5050,
+        "n_boardings": 10,
+        "n_alighting": 5 
+      }
+    ],
+    "trip_time_matrix": [
+      [ 0,  5,  8, 12, 15],  
+      [ 5,  0,  3,  9, 10],  
+      [ 8,  3,  0,  4,  7],  
+      [ 12, 9,  4,  0,  5],
+      [ 15, 10, 7,  5,  0]
+    ]
+  }
+  
+  

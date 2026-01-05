@@ -1,15 +1,16 @@
+
 [project]
 name = "vrp-mahm"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "gustavojorge",email = "gustavo.jorge@jusbrasil.com.br"}
+    {name = "gustavojorge", email = "gustavo.jorge@jusbrasil.com.br"}
 ]
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "spade (>=4.1.2,<5.0.0)",
-    "spade-bdi (>=0.3.2,<0.4.0)"
+    # Adicione aqui apenas as dependências realmente usadas, por exemplo:
+    # "loguru"
 ]
 
 

@@ -1,0 +1,3 @@
+run_id,checkpoint_evaluations,g_best_cost,g_best_agent,p_best_agent_0,p_best_agent_1,p_best_agent_2,p_best_agent_3,p_best_agent_4,p_best_agent_5,p_best_agent_6,p_best_agent_7,p_best_agent_8,p_best_agent_9
+5,20000,773.00,agent_5,914.00,994.00,1249.00,914.00,1175.00,773.00,1261.00,1073.00,1180.00,1041.00
+5,40000,718.00,agent_2,914.00,994.00,718.00,914.00,1175.00,773.00,1261.00,1073.00,1180.00,1041.00

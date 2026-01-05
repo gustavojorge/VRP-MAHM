@@ -1,0 +1,21 @@
+===================================
+ STARTING AGENT EXECUTION 
+===================================
+Instance: 100
+Available Metaheuristics: ['VND', 'ILS', 'VNS']
+
+--- Initial state ---
+Initial Solution/Route: [0, 5, 4, 3, 1, 2, 10, 11, 13, 16, 17, 18, 21, 20, 22, 26, 24, 19, 12, 6, 7, 15, 8, 9, 14, 25, 27, 28, 31, 32, 30, 34, 35, 36, 37, 38, 40, 39, 41, 44, 43, 47, 45, 42, 48, 46, 50, 51, 55, 54, 56, 57, 60, 61, 62, 59, 53, 52, 49, 58, 63, 64, 66, 67, 68, 69, 72, 70, 71, 73, 77, 78, 80, 81, 83, 84, 85, 82, 79, 76, 75, 74, 65, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 33, 29, 23, 0]
+Initial Cost: 994
+Evaluation Budget: 20000
+----------------------
+
+
+==== ITERATION 0 ====
+Scores: {'VND': 1.0, 'ILS': 1.0, 'VNS': 1.0}
+[Decision Method] 
+---> Chosen Metaheuristic: VNS
+[Action - Execution of VNS ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.900)

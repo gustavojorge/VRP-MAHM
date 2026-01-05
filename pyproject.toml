@@ -1,11 +1,10 @@
 
-[project]
+
+[tool.poetry]
 name = "vrp-mahm"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "gustavojorge", email = "gustavo.jorge@jusbrasil.com.br"}
-]
+authors = ["gustavojorge <gustavojorge080@gmail.com>"]
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

@@ -41,7 +41,6 @@ htmlcov/
 # Tool / OS / editor junk
 # ------------------------------
 .cache/
-*.log
 *.tmp
 *.swp
 *.swo

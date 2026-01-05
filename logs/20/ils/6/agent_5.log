@@ -1,0 +1,43 @@
+===================================
+ STARTING AGENT EXECUTION 
+===================================
+Instance: 20
+Available Metaheuristics: ['ILS']
+
+--- Initial state ---
+Initial Solution/Route: [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 8, 11, 12, 13, 14, 15, 16, 17, 18, 19, 0]
+Initial Cost: 141
+Evaluation Budget: 20000
+----------------------
+
+
+==== ITERATION 0 ====
+Scores: {'ILS': 1.0}
+[Decision Method] 
+---> Chosen Metaheuristic: ILS
+[Action - Execution of ILS ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (g_best not available, using fallback)
+---> Path-relinking NO improvement: 126.00 -> 126.00
+---> Updated probabilities: prob_p_best=0.850, prob_g_best=0.150
+[Update of p_best]
+---> p_best UPDATED: From 141 to 126
+[Update of g_best (Blackboard)]
+---> g_best UPDATED: From inf to 126 (by agent agent_5)
+Current Cost: 126, p_best: 126, g_best: 126 (agent agent_5)
+
+===================================
+ EXECUTION FINALIZED 
+===================================
+
+--- Final result ---
+Agent's p_best cost: 126
+Agent's p_best solution/route: [0, 1, 17, 18, 19, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 0]
+
+Global Best:
+Cost : 126
+Solution/Route  : [0, 1, 17, 18, 19, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 0]
+
+Run Time: 36.03 seconds (0.60 minutes)
+Total Evaluations: 37878

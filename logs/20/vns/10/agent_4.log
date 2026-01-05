@@ -1,0 +1,43 @@
+===================================
+ STARTING AGENT EXECUTION 
+===================================
+Instance: 20
+Available Metaheuristics: ['VNS']
+
+--- Initial state ---
+Initial Solution/Route: [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 8, 11, 12, 13, 14, 15, 16, 17, 18, 19, 0]
+Initial Cost: 141
+Evaluation Budget: 20000
+----------------------
+
+
+==== ITERATION 0 ====
+Scores: {'VNS': 1.0}
+[Decision Method] 
+---> Chosen Metaheuristic: VNS
+[Action - Execution of VNS ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (g_best not available, using fallback)
+---> Path-relinking NO improvement: 124.00 -> 124.00
+---> Updated probabilities: prob_p_best=0.850, prob_g_best=0.150
+[Update of p_best]
+---> p_best UPDATED: From 141 to 124
+[Update of g_best (Blackboard)]
+---> g_best UPDATED: From inf to 124 (by agent agent_4)
+Current Cost: 124, p_best: 124, g_best: 124 (agent agent_4)
+
+===================================
+ EXECUTION FINALIZED 
+===================================
+
+--- Final result ---
+Agent's p_best cost: 124
+Agent's p_best solution/route: [0, 1, 2, 3, 4, 6, 7, 13, 14, 17, 18, 19, 16, 15, 12, 11, 10, 9, 8, 5, 0]
+
+Global Best:
+Cost : 124
+Solution/Route  : [0, 1, 2, 3, 4, 6, 7, 13, 14, 17, 18, 19, 16, 15, 12, 11, 10, 9, 8, 5, 0]
+
+Run Time: 127.97 seconds (2.13 minutes)
+Total Evaluations: 111453

@@ -1,5 +1,6 @@
 
 
+
 [tool.poetry]
 name = "vrp-mahm"
 version = "0.1.0"
@@ -7,10 +8,9 @@ description = ""
 authors = ["gustavojorge <gustavojorge080@gmail.com>"]
 readme = "README.md"
 
+
 [tool.poetry.dependencies]
 python = ">=3.10"
-# loguru = "^0.7.0"
-# Adicione outras dependências aqui, se necessário
 
 
 [build-system]

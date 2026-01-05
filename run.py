@@ -622,39 +622,29 @@ def write_adaptive_csv(results: Dict[str, Dict[str, Union[Optional[float], int, 
     Args:
         results: Dictionary mapping instance names to their results (metaheuristic -> cost, "# vertices" -> num_nodes)
         csv_filename: Path to CSV file
-        executed_metaheuristics: List of metaheuristics that were executed
+        executed_metaheuristics: List of metaheuristics that were executed (not used, kept for compatibility)
     """
     # Read existing CSV to preserve previous data
     existing_data = read_existing_csv(csv_filename)
     
-    # Determine column name based on executed metaheuristics
-    if len(executed_metaheuristics) == len(AVAILABLE_METAHEURISTICS):
-        # All metaheuristics were executed, use "MAHM" column
-        column_name = "MAHM"
-    elif len(executed_metaheuristics) == 1:
-        # Single metaheuristic, use its name
-        column_name = executed_metaheuristics[0]
-    else:
-        # Multiple but not all - use comma-separated names or "MAHM"
-        # For simplicity, use "MAHM" if multiple are executed
-        column_name = "MAHM"
-    
     # Update existing data with new results
+    # The results dictionary already contains all columns (MAHM, ILS, VND, VNS) for each instance
     for instance_name, instance_results in results.items():
         if instance_name not in existing_data:
             existing_data[instance_name] = {}
         
-        # Update the column for this execution
-        cost = instance_results.get(column_name)
-        if cost is not None:
-            existing_data[instance_name][column_name] = f"{cost:.2f}"
-        else:
-            existing_data[instance_name][column_name] = "N/A"
-        
-        # Update "# vertices" column
-        num_vertices = instance_results.get("# vertices")
-        if num_vertices is not None:
-            existing_data[instance_name]["# vertices"] = str(num_vertices)
+        # Update all columns present in instance_results (not just one column)
+        for column_name, value in instance_results.items():
+            if column_name == "# vertices":
+                # Update "# vertices" column
+                if value is not None:
+                    existing_data[instance_name][column_name] = str(value)
+            else:
+                # Update cost columns (MAHM, ILS, VND, VNS, etc.)
+                if value is not None:
+                    existing_data[instance_name][column_name] = f"{value:.2f}"
+                else:
+                    existing_data[instance_name][column_name] = "N/A"
     
     # Determine all columns (Instance + # vertices + all unique metaheuristic columns)
     all_columns = set(['Instance', '# vertices'])

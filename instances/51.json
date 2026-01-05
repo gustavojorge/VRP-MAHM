@@ -134,7 +134,7 @@
       "latitude": -12.98041640601928,
       "longitude": -38.52281140105063,
       "n_boardings": 21,
-      "n_alighting": 5
+      "n_alighting": 21
     },
     {
       "id": 9,
@@ -143,7 +143,7 @@
       "latitude": -12.94364787732976,
       "longitude": -38.523860702372716,
       "n_boardings": 8,
-      "n_alighting": 4
+      "n_alighting": 8
     },
     {
       "id": 10,
@@ -197,7 +197,7 @@
       "latitude": -12.989293059786458,
       "longitude": -38.505669733826984,
       "n_boardings": 18,
-      "n_alighting": 7
+      "n_alighting": 18
     },
     {
       "id": 16,
@@ -269,7 +269,7 @@
       "latitude": -12.96039743958796,
       "longitude": -38.52191467586446,
       "n_boardings": 21,
-      "n_alighting": 4
+      "n_alighting": 21
     },
     {
       "id": 24,
@@ -305,7 +305,7 @@
       "latitude": -12.969986018698329,
       "longitude": -38.49955274601254,
       "n_boardings": 24,
-      "n_alighting": 7
+      "n_alighting": 24
     },
     {
       "id": 28,
@@ -314,7 +314,7 @@
       "latitude": -12.978541844842065,
       "longitude": -38.48246961181372,
       "n_boardings": 11,
-      "n_alighting": 4
+      "n_alighting": 11
     },
     {
       "id": 29,
@@ -386,7 +386,7 @@
       "latitude": -12.990949046963204,
       "longitude": -38.49187553373147,
       "n_boardings": 19,
-      "n_alighting": 4
+      "n_alighting": 19
     },
     {
       "id": 37,
@@ -422,7 +422,7 @@
       "latitude": -12.953441836067753,
       "longitude": -38.50073925028084,
       "n_boardings": 22,
-      "n_alighting": 5
+      "n_alighting": 22
     },
     {
       "id": 41,
@@ -440,7 +440,7 @@
       "latitude": -12.94195414141823,
       "longitude": -38.48619544947754,
       "n_boardings": 22,
-      "n_alighting": 4
+      "n_alighting": 22
     },
     {
       "id": 43,
@@ -449,7 +449,7 @@
       "latitude": -12.996881630010295,
       "longitude": -38.538159889591924,
       "n_boardings": 18,
-      "n_alighting": 4
+      "n_alighting": 18
     },
     {
       "id": 44,
@@ -458,7 +458,7 @@
       "latitude": -12.960402903419801,
       "longitude": -38.48528438781402,
       "n_boardings": 25,
-      "n_alighting": 5
+      "n_alighting": 25
     },
     {
       "id": 45,
@@ -476,7 +476,7 @@
       "latitude": -12.982521510533678,
       "longitude": -38.52064888336723,
       "n_boardings": 5,
-      "n_alighting": 4
+      "n_alighting": 5
     },
     {
       "id": 47,
@@ -494,7 +494,7 @@
       "latitude": -12.970482502386789,
       "longitude": -38.51471004497625,
       "n_boardings": 22,
-      "n_alighting": 7
+      "n_alighting": 21
     },
     {
       "id": 49,

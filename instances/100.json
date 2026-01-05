@@ -107,7 +107,7 @@
       "latitude": -12.989737720535299,
       "longitude": -38.52066622233741,
       "n_boardings": 20,
-      "n_alighting": 9
+      "n_alighting": 19
     },
     {
       "id": 6,
@@ -161,7 +161,7 @@
       "latitude": -12.972568686183827,
       "longitude": -38.50961086677267,
       "n_boardings": 5,
-      "n_alighting": 4
+      "n_alighting": 5
     },
     {
       "id": 12,
@@ -170,7 +170,7 @@
       "latitude": -12.993816543320905,
       "longitude": -38.495698653012,
       "n_boardings": 16,
-      "n_alighting": 7
+      "n_alighting": 16
     },
     {
       "id": 13,
@@ -179,7 +179,7 @@
       "latitude": -12.95975574504944,
       "longitude": -38.53641236287121,
       "n_boardings": 6,
-      "n_alighting": 4
+      "n_alighting": 6
     },
     {
       "id": 14,
@@ -197,7 +197,7 @@
       "latitude": -12.993683176114839,
       "longitude": -38.512496306993725,
       "n_boardings": 20,
-      "n_alighting": 3
+      "n_alighting": 20
     },
     {
       "id": 16,
@@ -215,7 +215,7 @@
       "latitude": -12.957711238821123,
       "longitude": -38.50641526119815,
       "n_boardings": 14,
-      "n_alighting": 7
+      "n_alighting": 14
     },
     {
       "id": 18,
@@ -233,7 +233,7 @@
       "latitude": -12.950012141463896,
       "longitude": -38.5241980215508,
       "n_boardings": 21,
-      "n_alighting": 3
+      "n_alighting": 21
     },
     {
       "id": 20,
@@ -278,7 +278,7 @@
       "latitude": -12.976207212401926,
       "longitude": -38.49279848596823,
       "n_boardings": 15,
-      "n_alighting": 6
+      "n_alighting": 15
     },
     {
       "id": 25,
@@ -296,7 +296,7 @@
       "latitude": -12.955189249322542,
       "longitude": -38.530837838634135,
       "n_boardings": 7,
-      "n_alighting": 6
+      "n_alighting": 7
     },
     {
       "id": 27,
@@ -332,7 +332,7 @@
       "latitude": -12.957270008967875,
       "longitude": -38.54018769874724,
       "n_boardings": 16,
-      "n_alighting": 5
+      "n_alighting": 16
     },
     {
       "id": 31,
@@ -350,7 +350,7 @@
       "latitude": -12.941370152763307,
       "longitude": -38.50861998038759,
       "n_boardings": 21,
-      "n_alighting": 6
+      "n_alighting": 21
     },
     {
       "id": 33,
@@ -368,7 +368,7 @@
       "latitude": -12.953535081519247,
       "longitude": -38.51207130082889,
       "n_boardings": 23,
-      "n_alighting": 6
+      "n_alighting": 23
     },
     {
       "id": 35,
@@ -413,7 +413,7 @@
       "latitude": -12.966481356774075,
       "longitude": -38.480806458990344,
       "n_boardings": 11,
-      "n_alighting": 7
+      "n_alighting": 11
     },
     {
       "id": 40,
@@ -440,7 +440,7 @@
       "latitude": -12.956408571086236,
       "longitude": -38.53547455125996,
       "n_boardings": 25,
-      "n_alighting": 4
+      "n_alighting": 24
     },
     {
       "id": 43,
@@ -467,7 +467,7 @@
       "latitude": -12.962886705219566,
       "longitude": -38.50800671565893,
       "n_boardings": 9,
-      "n_alighting": 3
+      "n_alighting": 9
     },
     {
       "id": 46,
@@ -512,7 +512,7 @@
       "latitude": -12.965855737138451,
       "longitude": -38.53870217912206,
       "n_boardings": 10,
-      "n_alighting": 5
+      "n_alighting": 10
     },
     {
       "id": 51,
@@ -521,7 +521,7 @@
       "latitude": -12.981793179839002,
       "longitude": -38.51295897174104,
       "n_boardings": 24,
-      "n_alighting": 5
+      "n_alighting": 24
     },
     {
       "id": 52,
@@ -548,7 +548,7 @@
       "latitude": -12.97077997899973,
       "longitude": -38.48221129057201,
       "n_boardings": 22,
-      "n_alighting": 8
+      "n_alighting": 22
     },
     {
       "id": 55,
@@ -557,7 +557,7 @@
       "latitude": -12.989787056224458,
       "longitude": -38.50640272306467,
       "n_boardings": 12,
-      "n_alighting": 6
+      "n_alighting": 12
     },
     {
       "id": 56,
@@ -593,7 +593,7 @@
       "latitude": -12.963549850042716,
       "longitude": -38.4827555987395,
       "n_boardings": 9,
-      "n_alighting": 5
+      "n_alighting": 9
     },
     {
       "id": 60,
@@ -602,7 +602,7 @@
       "latitude": -12.979030299213692,
       "longitude": -38.53196954429162,
       "n_boardings": 7,
-      "n_alighting": 5
+      "n_alighting": 7
     },
     {
       "id": 61,
@@ -629,7 +629,7 @@
       "latitude": -12.965299006180997,
       "longitude": -38.52234192791621,
       "n_boardings": 14,
-      "n_alighting": 3
+      "n_alighting": 14
     },
     {
       "id": 64,
@@ -638,7 +638,7 @@
       "latitude": -12.968421814714793,
       "longitude": -38.50843526594473,
       "n_boardings": 13,
-      "n_alighting": 7
+      "n_alighting": 13
     },
     {
       "id": 65,
@@ -647,7 +647,7 @@
       "latitude": -12.95296698433901,
       "longitude": -38.53727924124849,
       "n_boardings": 19,
-      "n_alighting": 8
+      "n_alighting": 19
     },
     {
       "id": 66,
@@ -674,7 +674,7 @@
       "latitude": -12.976626041407027,
       "longitude": -38.52809023328353,
       "n_boardings": 19,
-      "n_alighting": 5
+      "n_alighting": 19
     },
     {
       "id": 69,
@@ -719,7 +719,7 @@
       "latitude": -12.977869823562656,
       "longitude": -38.516629507976184,
       "n_boardings": 17,
-      "n_alighting": 3
+      "n_alighting": 17
     },
     {
       "id": 74,
@@ -782,7 +782,7 @@
       "latitude": -12.975874329905276,
       "longitude": -38.51422305352502,
       "n_boardings": 15,
-      "n_alighting": 5
+      "n_alighting": 15
     },
     {
       "id": 81,
@@ -791,7 +791,7 @@
       "latitude": -12.941159125065541,
       "longitude": -38.52866406318055,
       "n_boardings": 24,
-      "n_alighting": 8
+      "n_alighting": 24
     },
     {
       "id": 82,
@@ -800,7 +800,7 @@
       "latitude": -12.942420119970324,
       "longitude": -38.50810952083524,
       "n_boardings": 17,
-      "n_alighting": 4
+      "n_alighting": 17
     },
     {
       "id": 83,
@@ -836,7 +836,7 @@
       "latitude": -12.967809919670273,
       "longitude": -38.48172820037682,
       "n_boardings": 14,
-      "n_alighting": 4
+      "n_alighting": 14
     },
     {
       "id": 87,
@@ -881,7 +881,7 @@
       "latitude": -12.942948794546068,
       "longitude": -38.51682785959828,
       "n_boardings": 25,
-      "n_alighting": 3
+      "n_alighting": 23
     },
     {
       "id": 92,
@@ -890,7 +890,7 @@
       "latitude": -12.985264517080768,
       "longitude": -38.50770144488606,
       "n_boardings": 16,
-      "n_alighting": 4
+      "n_alighting": 16
     },
     {
       "id": 93,
@@ -899,7 +899,7 @@
       "latitude": -12.951310785630719,
       "longitude": -38.49172096776167,
       "n_boardings": 21,
-      "n_alighting": 4
+      "n_alighting": 21
     },
     {
       "id": 94,
@@ -917,7 +917,7 @@
       "latitude": -12.962594808582706,
       "longitude": -38.491274276359704,
       "n_boardings": 6,
-      "n_alighting": 4
+      "n_alighting": 6
     },
     {
       "id": 96,
@@ -953,7 +953,7 @@
       "latitude": -12.961706110800462,
       "longitude": -38.52403112599477,
       "n_boardings": 17,
-      "n_alighting": 4
+      "n_alighting": 17
     }
   ],
   "trip_time_matrix": [

@@ -16,3 +16,6 @@ Scores: {'VND': 1.0, 'ILS': 1.0, 'VNS': 1.0}
 [Decision Method] 
 ---> Chosen Metaheuristic: VNS
 [Action - Execution of VNS ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.900)

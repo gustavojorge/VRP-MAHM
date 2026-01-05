@@ -650,9 +650,12 @@ def write_adaptive_csv(results: Dict[str, Dict[str, Union[Optional[float], int, 
     all_columns = set(['Instance', '# vertices'])
     for instance_data in existing_data.values():
         all_columns.update(instance_data.keys())
-    
-    # Sort columns: Instance first, then "# vertices", then alphabetically
-    sorted_columns = ['Instance', '# vertices'] + sorted([c for c in all_columns if c not in ['Instance', '# vertices']])
+
+    # Ordem desejada: Instance, # vertices, MAHM, ILS, VND, VNS, depois as demais em ordem alfabética
+    preferred_order = ['Instance', '# vertices', 'MAHM', 'ILS', 'VND', 'VNS']
+    # Adiciona as colunas extras (não preferidas) em ordem alfabética
+    extra_columns = sorted([c for c in all_columns if c not in preferred_order])
+    sorted_columns = [col for col in preferred_order if col in all_columns] + extra_columns
     
     # Write CSV
     with open(csv_filename, 'w', newline='') as csvfile:

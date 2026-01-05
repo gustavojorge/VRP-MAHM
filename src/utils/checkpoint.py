@@ -73,7 +73,7 @@ def write_checkpoint(
         return  # Checkpoint not initialized
     
     # Check if we should write a checkpoint (multiple of 100,000)
-    checkpoint_interval = 100000
+    checkpoint_interval = 20000
     
     # Only proceed if total_evaluations is at least 100,000
     if total_evaluations < checkpoint_interval:

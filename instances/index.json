@@ -1,0 +1,78 @@
+{
+  "generated_at": "2026-01-04T09:49:30.931210",
+  "total_instances": 12,
+  "instances": [
+    {
+      "instance_id": "SUNT_SMALL_01_GROUP_01",
+      "filename": "sunt_small_01.json",
+      "num_nodes": 20,
+      "num_lines": 10
+    },
+    {
+      "instance_id": "SUNT_SMALL_02_GROUP_02",
+      "filename": "sunt_small_02.json",
+      "num_nodes": 20,
+      "num_lines": 10
+    },
+    {
+      "instance_id": "SUNT_MEDIUM_S_01_GROUP_03",
+      "filename": "sunt_medium_s_01.json",
+      "num_nodes": 30,
+      "num_lines": 10
+    },
+    {
+      "instance_id": "SUNT_MEDIUM_S_02_GROUP_04",
+      "filename": "sunt_medium_s_02.json",
+      "num_nodes": 30,
+      "num_lines": 10
+    },
+    {
+      "instance_id": "SUNT_MEDIUM_L_01_GROUP_05",
+      "filename": "sunt_medium_l_01.json",
+      "num_nodes": 50,
+      "num_lines": 10
+    },
+    {
+      "instance_id": "SUNT_MEDIUM_L_02_GROUP_06",
+      "filename": "sunt_medium_l_02.json",
+      "num_nodes": 50,
+      "num_lines": 10
+    },
+    {
+      "instance_id": "SUNT_LARGE_01_GROUP_07",
+      "filename": "sunt_large_01.json",
+      "num_nodes": 100,
+      "num_lines": 10
+    },
+    {
+      "instance_id": "SUNT_LARGE_02_GROUP_08",
+      "filename": "sunt_large_02.json",
+      "num_nodes": 100,
+      "num_lines": 10
+    },
+    {
+      "instance_id": "SUNT_LARGE_03_GROUP_09",
+      "filename": "sunt_large_03.json",
+      "num_nodes": 100,
+      "num_lines": 10
+    },
+    {
+      "instance_id": "SUNT_XLARGE_01_GROUP_10",
+      "filename": "sunt_xlarge_01.json",
+      "num_nodes": 150,
+      "num_lines": 10
+    },
+    {
+      "instance_id": "SUNT_XLARGE_02_GROUP_11",
+      "filename": "sunt_xlarge_02.json",
+      "num_nodes": 150,
+      "num_lines": 10
+    },
+    {
+      "instance_id": "SUNT_XLARGE_03_GROUP_12",
+      "filename": "sunt_xlarge_03.json",
+      "num_nodes": 150,
+      "num_lines": 10
+    }
+  ]
+}

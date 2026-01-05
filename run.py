@@ -27,7 +27,7 @@ from src.utils.load_instance import load_instance
 
 # Default configuration
 DEFAULT_NUM_AGENTS = 5
-DEFAULT_MAX_EVALUATIONS = 1000000  # Default evaluation budget
+DEFAULT_MAX_EVALUATIONS = 200000  # Default evaluation budget
 DEFAULT_ACTIONS = "mahm"
 NUM_RUNS = 10  # Number of repetitions for each action scenario
 

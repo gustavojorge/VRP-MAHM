@@ -1,0 +1,1151 @@
+===================================
+ STARTING AGENT EXECUTION 
+===================================
+Instance: 21
+Available Metaheuristics: ['VND']
+
+--- Initial state ---
+Initial Solution/Route: [0, 1, 3, 2, 5, 6, 7, 8, 9, 10, 11, 12, 14, 13, 15, 17, 18, 16, 19, 4, 0]
+Initial Cost: 140
+Evaluation Budget: 20000
+----------------------
+
+
+==== ITERATION 0 ====
+Scores: {'VND': 1.0}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (g_best not available, using fallback)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.850, prob_g_best=0.150
+[Update of p_best]
+---> p_best UPDATED: From 140 to 128
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 1 ====
+Scores: {'VND': 12.12}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.850)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.800, prob_g_best=0.200
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 2 ====
+Scores: {'VND': 7.12}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.200)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.200, prob_g_best=0.150
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 3 ====
+Scores: {'VND': 5.453333333333333}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.200)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.150, prob_g_best=0.850
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 4 ====
+Scores: {'VND': 4.62}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.850)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.850, prob_g_best=0.800
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 5 ====
+Scores: {'VND': 4.12}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.850)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.800, prob_g_best=0.200
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 6 ====
+Scores: {'VND': 3.7866666666666666}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.800)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.750, prob_g_best=0.250
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 7 ====
+Scores: {'VND': 3.5485714285714285}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.750)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.700, prob_g_best=0.300
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 8 ====
+Scores: {'VND': 3.37}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.300)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.300, prob_g_best=0.250
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 9 ====
+Scores: {'VND': 3.2311111111111113}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.250)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.700, prob_g_best=0.200
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 10 ====
+Scores: {'VND': 3.12}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.700)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.650, prob_g_best=0.350
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 11 ====
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.350)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.350, prob_g_best=0.300
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 12 ====
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.350)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.300, prob_g_best=0.700
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 13 ====
+Scores: {'VND': 2.8892307692307693}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.700)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.700, prob_g_best=0.650
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 14 ====
+Scores: {'VND': 2.834285714285714}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.700)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.650, prob_g_best=0.350
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 15 ====
+Scores: {'VND': 2.7866666666666666}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.650)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.600, prob_g_best=0.400
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 16 ====
+Scores: {'VND': 2.745}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.400)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.400, prob_g_best=0.350
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 17 ====
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.350)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.600, prob_g_best=0.300
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 18 ====
+Scores: {'VND': 2.6755555555555555}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.600)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.550, prob_g_best=0.450
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 19 ====
+Scores: {'VND': 2.646315789473684}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.450)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.450, prob_g_best=0.400
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 20 ====
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.450)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.400, prob_g_best=0.600
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 21 ====
+Scores: {'VND': 2.5961904761904764}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.400)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.350, prob_g_best=0.650
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 22 ====
+Scores: {'VND': 2.5745454545454547}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.650)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.650, prob_g_best=0.600
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 23 ====
+Scores: {'VND': 2.554782608695652}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.650)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.600, prob_g_best=0.400
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 24 ====
+Scores: {'VND': 2.5366666666666666}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.400)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.400, prob_g_best=0.350
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 25 ====
+Scores: {'VND': 2.52}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.350)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.600, prob_g_best=0.300
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 26 ====
+Scores: {'VND': 2.5046153846153847}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.600)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.550, prob_g_best=0.450
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 27 ====
+Scores: {'VND': 2.4903703703703703}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.550)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.500, prob_g_best=0.500
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 28 ====
+Scores: {'VND': 2.4771428571428573}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.500)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.500, prob_g_best=0.450
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 29 ====
+Scores: {'VND': 2.4648275862068965}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.500)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.450, prob_g_best=0.550
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 30 ====
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.550)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.550, prob_g_best=0.500
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 31 ====
+Scores: {'VND': 2.44258064516129}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.550)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.500, prob_g_best=0.500
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 32 ====
+Scores: {'VND': 2.4325}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.500)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.500, prob_g_best=0.450
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 33 ====
+Scores: {'VND': 2.423030303030303}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.450)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.500, prob_g_best=0.400
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 34 ====
+Scores: {'VND': 2.4141176470588235}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.500)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.450, prob_g_best=0.550
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 35 ====
+Scores: {'VND': 2.4057142857142857}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.450)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.400, prob_g_best=0.600
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 36 ====
+Scores: {'VND': 2.397777777777778}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.400)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.350, prob_g_best=0.650
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 37 ====
+Scores: {'VND': 2.3902702702702703}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.650)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.650, prob_g_best=0.600
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 38 ====
+Scores: {'VND': 2.383157894736842}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.600)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.350, prob_g_best=0.550
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 39 ====
+Scores: {'VND': 2.3764102564102565}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.550)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.650, prob_g_best=0.500
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 40 ====
+Scores: {'VND': 2.37}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.500)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.350, prob_g_best=0.450
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 41 ====
+Scores: {'VND': 2.36390243902439}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.350)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.300, prob_g_best=0.700
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 42 ====
+Scores: {'VND': 2.3580952380952382}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.700)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.700, prob_g_best=0.650
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 43 ====
+Scores: {'VND': 2.352558139534884}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.700)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.650, prob_g_best=0.350
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 44 ====
+Scores: {'VND': 2.347272727272727}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.350)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.350, prob_g_best=0.300
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 45 ====
+Scores: {'VND': 2.3422222222222224}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.350)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.300, prob_g_best=0.700
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 46 ====
+Scores: {'VND': 2.3373913043478263}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.700)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.700, prob_g_best=0.650
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 47 ====
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.650)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.300, prob_g_best=0.600
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 48 ====
+Scores: {'VND': 2.328333333333333}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.300)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.250, prob_g_best=0.750
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 49 ====
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.750)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.750, prob_g_best=0.700
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 50 ====
+Scores: {'VND': 2.32}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.750)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.700, prob_g_best=0.300
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 51 ====
+Scores: {'VND': 2.316078431372549}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.300)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.300, prob_g_best=0.250
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 52 ====
+Scores: {'VND': 2.312307692307692}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.250)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.700, prob_g_best=0.200
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 53 ====
+Scores: {'VND': 2.308679245283019}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.700)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.650, prob_g_best=0.350
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 54 ====
+Scores: {'VND': 2.3051851851851852}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.350)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.350, prob_g_best=0.300
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 55 ====
+Scores: {'VND': 2.3018181818181818}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.300)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.650, prob_g_best=0.250
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 56 ====
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.250)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.350, prob_g_best=0.200
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 57 ====
+Scores: {'VND': 2.2954385964912283}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.200)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.650, prob_g_best=0.150
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 58 ====
+Scores: {'VND': 2.2924137931034485}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.150)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.350, prob_g_best=0.100
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 59 ====
+Scores: {'VND': 2.289491525423729}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.350)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.300, prob_g_best=0.700
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 60 ====
+Scores: {'VND': 2.2866666666666666}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.700)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.700, prob_g_best=0.650
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 61 ====
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.650)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.300, prob_g_best=0.600
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 62 ====
+Scores: {'VND': 2.281290322580645}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.600)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.700, prob_g_best=0.550
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 63 ====
+Scores: {'VND': 2.2787301587301587}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.700)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.650, prob_g_best=0.350
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 64 ====
+Scores: {'VND': 2.27625}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.650)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.600, prob_g_best=0.400
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 65 ====
+Scores: {'VND': 2.273846153846154}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.600)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.550, prob_g_best=0.450
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 66 ====
+Scores: {'VND': 2.2715151515151515}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.550)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.500, prob_g_best=0.500
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 67 ====
+Scores: {'VND': 2.2692537313432837}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.500)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.500, prob_g_best=0.450
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 68 ====
+Scores: {'VND': 2.267058823529412}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.450)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.500, prob_g_best=0.400
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 69 ====
+Scores: {'VND': 2.264927536231884}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.500)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.450, prob_g_best=0.550
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 70 ====
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.450)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.400, prob_g_best=0.600
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 71 ====
+Scores: {'VND': 2.260845070422535}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.600)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.600, prob_g_best=0.550
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 72 ====
+Scores: {'VND': 2.258888888888889}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.600)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.550, prob_g_best=0.450
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 73 ====
+Scores: {'VND': 2.2569863013698632}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.450)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.450, prob_g_best=0.400
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 74 ====
+Scores: {'VND': 2.255135135135135}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.450)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.400, prob_g_best=0.600
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 75 ====
+Scores: {'VND': 2.2533333333333334}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.600)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.600, prob_g_best=0.550
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 76 ====
+Scores: {'VND': 2.251578947368421}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.600)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.550, prob_g_best=0.450
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 77 ====
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.450)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.450, prob_g_best=0.400
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 78 ====
+Scores: {'VND': 2.2482051282051283}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.400)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.550, prob_g_best=0.350
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 79 ====
+Scores: {'VND': 2.2465822784810126}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.350)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.450, prob_g_best=0.300
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+==== ITERATION 80 ====
+Scores: {'VND': 2.245}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.450)
+---> Path-relinking NO improvement: 128.00 -> 128.00
+---> Updated probabilities: prob_p_best=0.400, prob_g_best=0.600
+[Update of p_best]
+[Update of g_best (Blackboard)]
+Current Cost: 128, p_best: 128, g_best: 128 (agent agent_0)
+
+===================================
+ EXECUTION FINALIZED 
+===================================
+
+--- Final result ---
+Agent's p_best cost: 128
+Agent's p_best solution/route: [0, 1, 3, 2, 5, 6, 7, 8, 9, 10, 11, 12, 15, 14, 19, 17, 18, 16, 13, 4, 0]
+
+Global Best:
+Cost : 128
+Solution/Route  : [0, 1, 3, 2, 5, 6, 7, 8, 9, 10, 11, 12, 15, 14, 19, 17, 18, 16, 13, 4, 0]
+
+Run Time: 24.95 seconds (0.42 minutes)
+Total Evaluations: 20225

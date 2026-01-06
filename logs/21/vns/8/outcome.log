@@ -1,0 +1,40 @@
+================================================================================
+ EXPERIMENT OUTCOME SUMMARY
+================================================================================
+
+Instance: 21
+Action: VNS
+Run Number: 8
+Number of Agents: 10
+
+--------------------------------------------------------------------------------
+GLOBAL BEST SOLUTION
+--------------------------------------------------------------------------------
+Best Cost: 116.00
+Found by Agent: agent_3
+
+--------------------------------------------------------------------------------
+EXECUTION TIME
+--------------------------------------------------------------------------------
+Average Time per Agent: 109.40 seconds (1.82 minutes)
+Maximum Agent Time: 111.94 seconds (1.87 minutes)
+
+--------------------------------------------------------------------------------
+OBJECTIVE FUNCTION EVALUATIONS
+--------------------------------------------------------------------------------
+Total Evaluations: 1167257
+Average Evaluations per Agent: 116725.70
+
+Per-Agent Breakdown:
+  agent_0: 119322 evaluations
+  agent_1: 113692 evaluations
+  agent_2: 121754 evaluations
+  agent_3: 111497 evaluations
+  agent_4: 130341 evaluations
+  agent_5: 114659 evaluations
+  agent_6: 117653 evaluations
+  agent_7: 114426 evaluations
+  agent_8: 118321 evaluations
+  agent_9: 105592 evaluations
+
+================================================================================

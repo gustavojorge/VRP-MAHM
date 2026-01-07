@@ -1,0 +1,40 @@
+================================================================================
+ EXPERIMENT OUTCOME SUMMARY
+================================================================================
+
+Instance: 31
+Action: ILS
+Run Number: 8
+Number of Agents: 10
+
+--------------------------------------------------------------------------------
+GLOBAL BEST SOLUTION
+--------------------------------------------------------------------------------
+Best Cost: 176.00
+Found by Agent: agent_4
+
+--------------------------------------------------------------------------------
+EXECUTION TIME
+--------------------------------------------------------------------------------
+Average Time per Agent: 73.43 seconds (1.22 minutes)
+Maximum Agent Time: 77.34 seconds (1.29 minutes)
+
+--------------------------------------------------------------------------------
+OBJECTIVE FUNCTION EVALUATIONS
+--------------------------------------------------------------------------------
+Total Evaluations: 840585
+Average Evaluations per Agent: 84058.50
+
+Per-Agent Breakdown:
+  agent_0: 79747 evaluations
+  agent_1: 82368 evaluations
+  agent_2: 75636 evaluations
+  agent_3: 73941 evaluations
+  agent_4: 106977 evaluations
+  agent_5: 80901 evaluations
+  agent_6: 76809 evaluations
+  agent_7: 84252 evaluations
+  agent_8: 104371 evaluations
+  agent_9: 75583 evaluations
+
+================================================================================

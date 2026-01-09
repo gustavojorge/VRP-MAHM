@@ -1,0 +1,42 @@
+===================================
+ STARTING AGENT EXECUTION 
+===================================
+Instance: 101
+Available Metaheuristics: ['VND', 'ILS', 'VNS']
+
+--- Initial state ---
+Initial Solution/Route: [0, 4, 2, 3, 1, 7, 11, 10, 9, 12, 13, 18, 19, 20, 16, 21, 22, 25, 23, 28, 26, 30, 32, 31, 33, 34, 36, 38, 40, 43, 44, 45, 46, 42, 39, 35, 29, 24, 17, 6, 5, 8, 15, 14, 37, 41, 47, 49, 50, 52, 53, 54, 57, 56, 55, 51, 59, 58, 62, 64, 65, 66, 68, 67, 63, 61, 69, 70, 71, 73, 72, 74, 75, 77, 76, 80, 81, 78, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 97, 96, 98, 99, 79, 60, 48, 27, 0]
+Initial Cost: 976
+Evaluation Budget: 20000
+----------------------
+
+
+==== ITERATION 0 ====
+Scores: {'VND': 1.0, 'ILS': 1.0, 'VNS': 1.0}
+[Decision Method] 
+---> Chosen Metaheuristic: ILS
+[Action - Execution of ILS ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (prob_p_best=0.900)
+---> Path-relinking NO improvement: 830.00 -> 830.00
+---> Updated probabilities: prob_p_best=0.850, prob_g_best=0.150
+[Update of p_best]
+---> p_best UPDATED: From 976 to 830
+[Update of g_best (Blackboard)]
+Current Cost: 830, p_best: 830, g_best: 667 (agent agent_9)
+
+===================================
+ EXECUTION FINALIZED 
+===================================
+
+--- Final result ---
+Agent's p_best cost: 830
+Agent's p_best solution/route: [0, 1, 2, 4, 3, 7, 9, 10, 11, 12, 15, 16, 21, 20, 18, 19, 22, 23, 27, 28, 29, 30, 31, 32, 33, 35, 36, 38, 40, 43, 44, 45, 46, 42, 41, 37, 25, 24, 17, 6, 5, 8, 13, 26, 34, 39, 47, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 64, 65, 66, 68, 67, 63, 62, 69, 70, 71, 72, 73, 74, 75, 77, 79, 80, 81, 78, 82, 83, 84, 85, 86, 89, 88, 87, 90, 91, 92, 93, 94, 95, 97, 96, 98, 99, 76, 60, 48, 14, 0]
+
+Global Best:
+Cost : 667
+Solution/Route  : [0, 1, 2, 4, 5, 7, 8, 6, 11, 12, 13, 14, 16, 15, 17, 19, 22, 23, 25, 24, 27, 28, 29, 30, 32, 33, 34, 36, 39, 38, 40, 41, 42, 43, 44, 45, 46, 49, 51, 50, 52, 53, 54, 55, 56, 57, 58, 59, 62, 64, 66, 68, 69, 70, 72, 73, 74, 75, 77, 76, 78, 80, 81, 79, 82, 84, 85, 86, 88, 87, 90, 91, 93, 94, 95, 97, 98, 99, 96, 92, 89, 83, 71, 67, 65, 63, 61, 60, 48, 47, 37, 35, 31, 26, 21, 20, 18, 10, 9, 3, 0]
+
+Run Time: 1174.06 seconds (19.57 minutes)
+Total Evaluations: 859064

@@ -1,0 +1,43 @@
+===================================
+ STARTING AGENT EXECUTION 
+===================================
+Instance: 50
+Available Metaheuristics: ['ILS']
+
+--- Initial state ---
+Initial Solution/Route: [0, 2, 3, 6, 8, 5, 1, 10, 9, 12, 14, 11, 16, 18, 19, 21, 22, 20, 15, 13, 17, 23, 25, 24, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 45, 46, 47, 48, 49, 29, 26, 7, 4, 44, 0]
+Initial Cost: 555
+Evaluation Budget: 20000
+----------------------
+
+
+==== ITERATION 0 ====
+Scores: {'ILS': 1.0}
+[Decision Method] 
+---> Chosen Metaheuristic: ILS
+[Action - Execution of ILS ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: p_best (g_best not available, using fallback)
+---> Path-relinking IMPROVED: 457.00 -> 436.00
+---> Updated probabilities: prob_p_best=0.950, prob_g_best=0.050
+[Update of p_best]
+---> p_best UPDATED: From 555 to 436
+[Update of g_best (Blackboard)]
+---> g_best UPDATED: From 495 to 436 (by agent agent_0)
+Current Cost: 436, p_best: 436, g_best: 436 (agent agent_0)
+
+===================================
+ EXECUTION FINALIZED 
+===================================
+
+--- Final result ---
+Agent's p_best cost: 436
+Agent's p_best solution/route: [0, 3, 2, 1, 5, 8, 9, 11, 13, 12, 14, 18, 19, 21, 27, 28, 30, 20, 17, 16, 15, 23, 24, 25, 26, 29, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 49, 48, 47, 6, 4, 7, 22, 10, 0]
+
+Global Best:
+Cost : 436
+Solution/Route  : [0, 3, 2, 1, 5, 8, 9, 11, 13, 12, 14, 18, 19, 21, 27, 28, 30, 20, 17, 16, 15, 23, 24, 25, 26, 29, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 49, 48, 47, 6, 4, 7, 22, 10, 0]
+
+Run Time: 441.64 seconds (7.36 minutes)
+Total Evaluations: 213169

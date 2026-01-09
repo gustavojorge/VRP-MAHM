@@ -1,0 +1,40 @@
+================================================================================
+ EXPERIMENT OUTCOME SUMMARY
+================================================================================
+
+Instance: 101
+Action: MAHM
+Run Number: 3
+Number of Agents: 10
+
+--------------------------------------------------------------------------------
+GLOBAL BEST SOLUTION
+--------------------------------------------------------------------------------
+Best Cost: 633.00
+Found by Agent: agent_2
+
+--------------------------------------------------------------------------------
+EXECUTION TIME
+--------------------------------------------------------------------------------
+Average Time per Agent: 1745.43 seconds (29.09 minutes)
+Maximum Agent Time: 4542.94 seconds (75.72 minutes)
+
+--------------------------------------------------------------------------------
+OBJECTIVE FUNCTION EVALUATIONS
+--------------------------------------------------------------------------------
+Total Evaluations: 21611559
+Average Evaluations per Agent: 2161155.90
+
+Per-Agent Breakdown:
+  agent_0: 7580897 evaluations
+  agent_1: 1465506 evaluations
+  agent_2: 7869315 evaluations
+  agent_3: 280438 evaluations
+  agent_4: 443009 evaluations
+  agent_5: 1533262 evaluations
+  agent_6: 1073028 evaluations
+  agent_7: 809820 evaluations
+  agent_8: 329641 evaluations
+  agent_9: 226643 evaluations
+
+================================================================================

@@ -1,0 +1,42 @@
+===================================
+ STARTING AGENT EXECUTION 
+===================================
+Instance: 50
+Available Metaheuristics: ['VND']
+
+--- Initial state ---
+Initial Solution/Route: [0, 2, 5, 8, 4, 3, 1, 10, 11, 13, 14, 15, 12, 9, 6, 16, 19, 21, 22, 20, 18, 24, 26, 25, 23, 27, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 46, 45, 48, 29, 17, 7, 28, 47, 49, 0]
+Initial Cost: 580
+Evaluation Budget: 20000
+----------------------
+
+
+==== ITERATION 0 ====
+Scores: {'VND': 1.0}
+[Decision Method] 
+---> Chosen Metaheuristic: VND
+[Action - Execution of VND ]
+[Learning Method - Updating beliefs after action]
+[Velocity Operator (Path-Relinking)]
+---> Selected target: g_best (prob_g_best=0.100)
+---> Path-relinking IMPROVED: 514.00 -> 457.00
+---> Updated probabilities: prob_p_best=0.850, prob_g_best=0.150
+[Update of p_best]
+---> p_best UPDATED: From 580 to 457
+[Update of g_best (Blackboard)]
+Current Cost: 457, p_best: 457, g_best: 457 (agent agent_0)
+
+===================================
+ EXECUTION FINALIZED 
+===================================
+
+--- Final result ---
+Agent's p_best cost: 457
+Agent's p_best solution/route: [0, 2, 3, 4, 5, 8, 9, 11, 13, 12, 14, 15, 16, 18, 19, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 45, 46, 49, 48, 47, 20, 10, 6, 7, 17, 22, 44, 1, 0]
+
+Global Best:
+Cost : 457
+Solution/Route  : [0, 2, 3, 4, 5, 8, 9, 11, 13, 12, 14, 15, 16, 18, 19, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 45, 46, 49, 48, 47, 20, 10, 6, 7, 17, 22, 44, 1, 0]
+
+Run Time: 43.45 seconds (0.72 minutes)
+Total Evaluations: 20843
